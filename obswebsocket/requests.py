@@ -5,301 +5,70 @@
 
 from . import base_classes
 
-class GetVersion(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "GetVersion"
-        self.datain["obs-websocket-version"] = None
-        self.datain["obs-studio-version"] = None
-        self.datain["available-requests"] = None
+class SetSourceRender(base_classes.Baserequests):
+    """Show or hide a specified source item in a specified scene.
 
-    def getObsWebsocketVersion(self):
-        return self.datain["obs-websocket-version"]
-
-    def getObsStudioVersion(self):
-        return self.datain["obs-studio-version"]
-
-    def getAvailableRequests(self):
-        return self.datain["available-requests"]
-
-
-class GetAuthRequired(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "GetAuthRequired"
-        self.datain["challenge"] = None
-        self.datain["salt"] = None
-
-    def getChallenge(self):
-        return self.datain["challenge"]
-
-    def getSalt(self):
-        return self.datain["salt"]
-
-
-class Authenticate(base_classes.BaseRequest):
-    def __init__(self, auth):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "Authenticate"
-        self.dataout["auth"] = auth
-
-
-class GetCurrentScene(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "GetCurrentScene"
-        self.datain["name"] = None
-        self.datain["sources"] = None
-
-    def getName(self):
-        return self.datain["name"]
-
-    def getSources(self):
-        return self.datain["sources"]
-
-
-class SetCurrentScene(base_classes.BaseRequest):
-    def __init__(self, scene_name):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "SetCurrentScene"
-        self.dataout["scene-name"] = scene_name
-
-
-class GetSceneList(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "GetSceneList"
-        self.datain["current-scene"] = None
-        self.datain["scenes"] = None
-
-    def getCurrentScene(self):
-        return self.datain["current-scene"]
-
-    def getScenes(self):
-        return self.datain["scenes"]
-
-
-class SetSourceRender(base_classes.BaseRequest):
-    def __init__(self, source, render, scene_name):
-        base_classes.BaseRequest.__init__(self)
+    :Arguments:
+       *source*
+            type: String
+            Name of the source in the specified scene.
+       *render*
+            type: boolean
+            Desired visibility.
+       *scene-name*
+            type: String (optional)
+            Name of the scene where the source resides. Defaults to the currently active scene.
+    """
+    def __init__(self, source, render, scene_name = None):
+        base_classes.Baserequests.__init__(self)
         self.name = "SetSourceRender"
         self.dataout["source"] = source
         self.dataout["render"] = render
-        self.dataout["scene-name"] = scene_name
+        self.dataout["scene_name"] = scene_name
 
 
-class GetStudioModeStatus(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "GetStudioModeStatus"
-        self.datain["studio-mode"] = None
+class SetVolume(base_classes.Baserequests):
+    """Set the volume of the specified source.
 
-    def getStudioMode(self):
-        return self.datain["studio-mode"]
-
-
-class GetPreviewScene(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "GetPreviewScene"
-
-
-class SetPreviewScene(base_classes.BaseRequest):
-    def __init__(self, scene_name):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "SetPreviewScene"
-        self.dataout["scene-name"] = scene_name
-
-
-class TransitionToProgram(base_classes.BaseRequest):
-    def __init__(self, with_transition):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "TransitionToProgram"
-        self.datain["name"] = None
-        self.datain["duration"] = None
-        self.dataout["with-transition"] = with_transition
-
-    def getName(self):
-        return self.datain["name"]
-
-    def getDuration(self):
-        return self.datain["duration"]
-
-
-class EnableStudioMode(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "EnableStudioMode"
-
-
-class DisableStudioMode(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "DisableStudioMode"
-
-
-class ToggleStudioMode(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "ToggleStudioMode"
-
-
-class StartStopStreaming(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "StartStopStreaming"
-
-
-class StartStopRecording(base_classes.BaseRequest):
-    def __init__(self, stream):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "StartStopRecording"
-        self.dataout["stream"] = stream
-
-
-class StartStreaming(base_classes.BaseRequest):
-    def __init__(self, stream, settings, type, metadata, server, key, use_auth, username, password):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "StartStreaming"
-        self.dataout["stream"] = stream
-        self.dataout["settings"] = settings
-        self.dataout["type"] = type
-        self.dataout["metadata"] = metadata
-        self.dataout["server"] = server
-        self.dataout["key"] = key
-        self.dataout["use-auth"] = use_auth
-        self.dataout["username"] = username
-        self.dataout["password"] = password
-
-
-class StopStreaming(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "StopStreaming"
-
-
-class StartRecording(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "StartRecording"
-
-
-class StopRecording(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "StopRecording"
-
-
-class SetRecordingFolder(base_classes.BaseRequest):
-    def __init__(self, rec_folder):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "SetRecordingFolder"
-        self.dataout["rec-folder"] = rec_folder
-
-
-class GetRecordingFolder(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "GetRecordingFolder"
-        self.datain["rec-folder"] = None
-
-    def getRecFolder(self):
-        return self.datain["rec-folder"]
-
-
-class GetStreamingStatus(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "GetStreamingStatus"
-        self.datain["streaming"] = None
-        self.datain["recording"] = None
-        self.datain["stream-timecode"] = None
-        self.datain["rec-timecode"] = None
-        self.datain["preview-only"] = None
-
-    def getStreaming(self):
-        return self.datain["streaming"]
-
-    def getRecording(self):
-        return self.datain["recording"]
-
-    def getStreamTimecode(self):
-        return self.datain["stream-timecode"]
-
-    def getRecTimecode(self):
-        return self.datain["rec-timecode"]
-
-    def getPreviewOnly(self):
-        return self.datain["preview-only"]
-
-
-class GetTransitionList(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "GetTransitionList"
-        self.datain["current-transition"] = None
-        self.datain["transitions"] = None
-
-    def getCurrentTransition(self):
-        return self.datain["current-transition"]
-
-    def getTransitions(self):
-        return self.datain["transitions"]
-
-
-class GetCurrentTransition(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "GetCurrentTransition"
-        self.datain["name"] = None
-        self.datain["duration"] = None
-
-    def getName(self):
-        return self.datain["name"]
-
-    def getDuration(self):
-        return self.datain["duration"]
-
-
-class SetCurrentTransition(base_classes.BaseRequest):
-    def __init__(self, transition_name):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "SetCurrentTransition"
-        self.dataout["transition-name"] = transition_name
-
-
-class SetTransitionDuration(base_classes.BaseRequest):
-    def __init__(self, duration):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "SetTransitionDuration"
-        self.dataout["duration"] = duration
-
-
-class GetTransitionDuration(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "GetTransitionDuration"
-        self.datain["transition-duration"] = None
-
-    def getTransitionDuration(self):
-        return self.datain["transition-duration"]
-
-
-class SetVolume(base_classes.BaseRequest):
+    :Arguments:
+       *source*
+            type: String
+            Name of the source.
+       *volume*
+            type: double
+            Desired volume. Must be between `0.0` and `1.0`.
+    """
     def __init__(self, source, volume):
-        base_classes.BaseRequest.__init__(self)
+        base_classes.Baserequests.__init__(self)
         self.name = "SetVolume"
         self.dataout["source"] = source
         self.dataout["volume"] = volume
 
 
-class GetVolume(base_classes.BaseRequest):
+class GetVolume(base_classes.Baserequests):
+    """Get the volume of the specified source.
+
+    :Arguments:
+       *source*
+            type: String
+            Name of the source.
+    :Returns:
+       *name*
+            type: String
+            Name of the source.
+       *volume*
+            type: double
+            Volume of the source. Between `0.0` and `1.0`.
+       *mute*
+            type: boolean
+            Indicates whether the source is muted.
+    """
     def __init__(self, source):
-        base_classes.BaseRequest.__init__(self)
+        base_classes.Baserequests.__init__(self)
         self.name = "GetVolume"
         self.datain["name"] = None
         self.datain["volume"] = None
-        self.datain["muted"] = None
+        self.datain["mute"] = None
         self.dataout["source"] = source
 
     def getName(self):
@@ -308,21 +77,59 @@ class GetVolume(base_classes.BaseRequest):
     def getVolume(self):
         return self.datain["volume"]
 
-    def getMuted(self):
-        return self.datain["muted"]
+    def getMute(self):
+        return self.datain["mute"]
 
 
-class SetMute(base_classes.BaseRequest):
+class ToggleMute(base_classes.Baserequests):
+    """Inverts the mute status of a specified source.
+
+    :Arguments:
+       *source*
+            type: String
+            The name of the source.
+    """
+    def __init__(self, source):
+        base_classes.Baserequests.__init__(self)
+        self.name = "ToggleMute"
+        self.dataout["source"] = source
+
+
+class SetMute(base_classes.Baserequests):
+    """Sets the mute status of a specified source.
+
+    :Arguments:
+       *source*
+            type: String
+            The name of the source.
+       *mute*
+            type: boolean
+            Desired mute status.
+    """
     def __init__(self, source, mute):
-        base_classes.BaseRequest.__init__(self)
+        base_classes.Baserequests.__init__(self)
         self.name = "SetMute"
         self.dataout["source"] = source
         self.dataout["mute"] = mute
 
 
-class GetMute(base_classes.BaseRequest):
+class GetMute(base_classes.Baserequests):
+    """Get the mute status of a specified source.
+
+    :Arguments:
+       *source*
+            type: String
+            The name of the source.
+    :Returns:
+       *name*
+            type: String
+            The name of the source.
+       *muted*
+            type: boolean
+            Mute status of the source.
+    """
     def __init__(self, source):
-        base_classes.BaseRequest.__init__(self)
+        base_classes.Baserequests.__init__(self)
         self.name = "GetMute"
         self.datain["name"] = None
         self.datain["muted"] = None
@@ -335,204 +142,287 @@ class GetMute(base_classes.BaseRequest):
         return self.datain["muted"]
 
 
-class ToggleMute(base_classes.BaseRequest):
+class SetSyncOffset(base_classes.Baserequests):
+    """Set the audio sync offset of a specified source.
+
+    :Arguments:
+       *source*
+            type: String
+            The name of the source.
+       *offset*
+            type: int
+            The desired audio sync offset (in nanoseconds).
+    """
+    def __init__(self, source, offset):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetSyncOffset"
+        self.dataout["source"] = source
+        self.dataout["offset"] = offset
+
+
+class GetSyncOffset(base_classes.Baserequests):
+    """Get the audio sync offset of a specified source.
+
+    :Arguments:
+       *source*
+            type: String
+            The name of the source.
+    :Returns:
+       *name*
+            type: String
+            The name of the source.
+       *offset*
+            type: int
+            The audio sync offset (in nanoseconds).
+    """
     def __init__(self, source):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "ToggleMute"
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetSyncOffset"
+        self.datain["name"] = None
+        self.datain["offset"] = None
         self.dataout["source"] = source
 
+    def getName(self):
+        return self.datain["name"]
 
-class GetSpecialSources(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "GetSpecialSources"
-        self.datain["desktop-1"] = None
-        self.datain["desktop-1"] = None
-        self.datain["mic-1"] = None
-        self.datain["mic-2"] = None
-        self.datain["mic-3"] = None
-
-    def getDesktop1(self):
-        return self.datain["desktop-1"]
-
-    def getDesktop1(self):
-        return self.datain["desktop-1"]
-
-    def getMic1(self):
-        return self.datain["mic-1"]
-
-    def getMic2(self):
-        return self.datain["mic-2"]
-
-    def getMic3(self):
-        return self.datain["mic-3"]
+    def getOffset(self):
+        return self.datain["offset"]
 
 
-class SetSceneItemPosition(base_classes.BaseRequest):
-    def __init__(self, item, x, y, scene_name):
-        base_classes.BaseRequest.__init__(self)
+class SetSceneItemPosition(base_classes.Baserequests):
+    """Sets the coordinates of a specified source item.
+
+    :Arguments:
+       *scene-name*
+            type: String (optional)
+            The name of the scene that the source item belongs to. Defaults to the current scene.
+       *item*
+            type: String
+            The name of the source item.
+       *x*
+            type: double
+            X coordinate.
+       *y*
+            type: double
+            Y coordinate.
+    """
+    def __init__(self, item, x, y, scene_name = None):
+        base_classes.Baserequests.__init__(self)
         self.name = "SetSceneItemPosition"
         self.dataout["item"] = item
         self.dataout["x"] = x
         self.dataout["y"] = y
-        self.dataout["scene-name"] = scene_name
+        self.dataout["scene_name"] = scene_name
 
 
-class SetSceneItemTransform(base_classes.BaseRequest):
-    def __init__(self, item, x_scale, y_scale, rotation, scene_name):
-        base_classes.BaseRequest.__init__(self)
+class SetSceneItemTransform(base_classes.Baserequests):
+    """Set the transform of the specified source item.
+
+    :Arguments:
+       *scene-name*
+            type: String (optional)
+            The name of the scene that the source item belongs to. Defaults to the current scene.
+       *item*
+            type: String
+            The name of the source item.
+       *x-scale*
+            type: double
+            Width scale factor.
+       *y-scale*
+            type: double
+            Height scale factor.
+       *rotation*
+            type: double
+            Source item rotation (in degrees).
+    """
+    def __init__(self, item, x_scale, y_scale, rotation, scene_name = None):
+        base_classes.Baserequests.__init__(self)
         self.name = "SetSceneItemTransform"
         self.dataout["item"] = item
-        self.dataout["x-scale"] = x_scale
-        self.dataout["y-scale"] = y_scale
+        self.dataout["x_scale"] = x_scale
+        self.dataout["y_scale"] = y_scale
         self.dataout["rotation"] = rotation
-        self.dataout["scene-name"] = scene_name
+        self.dataout["scene_name"] = scene_name
 
 
-class SetSceneItemCrop(base_classes.BaseRequest):
-    def __init__(self, item, scene_name, top, bottom, left, right):
-        base_classes.BaseRequest.__init__(self)
+class SetSceneItemCrop(base_classes.Baserequests):
+    """Sets the crop coordinates of the specified source item.
+
+    :Arguments:
+       *scene-name*
+            type: String (optional)
+            the name of the scene that the source item belongs to. Defaults to the current scene.
+       *item*
+            type: String
+            The name of the source.
+       *top*
+            type: int
+            Pixel position of the top of the source item.
+       *bottom*
+            type: int
+            Pixel position of the bottom of the source item.
+       *left*
+            type: int
+            Pixel position of the left of the source item.
+       *right*
+            type: int
+            Pixel position of the right of the source item.
+    """
+    def __init__(self, item, top, bottom, left, right, scene_name = None):
+        base_classes.Baserequests.__init__(self)
         self.name = "SetSceneItemCrop"
         self.dataout["item"] = item
-        self.dataout["scene-name"] = scene_name
         self.dataout["top"] = top
         self.dataout["bottom"] = bottom
         self.dataout["left"] = left
         self.dataout["right"] = right
+        self.dataout["scene_name"] = scene_name
 
 
-class ResetSceneItem(base_classes.BaseRequest):
-    def __init__(self, item, scene_name):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "ResetSceneItem"
-        self.dataout["item"] = item
-        self.dataout["scene-name"] = scene_name
+class GetTextGDIPlusProperties(base_classes.Baserequests):
+    """Get the current properties of a Text GDI Plus source.
 
-
-class SetCurrentSceneCollection(base_classes.BaseRequest):
-    def __init__(self, sc_name):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "SetCurrentSceneCollection"
-        self.dataout["sc-name"] = sc_name
-
-
-class GetCurrentSceneCollection(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "GetCurrentSceneCollection"
-        self.datain["sc-name"] = None
-
-    def getScName(self):
-        return self.datain["sc-name"]
-
-
-class ListSceneCollections(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "ListSceneCollections"
-        self.datain["scene-collections"] = None
-
-    def getSceneCollections(self):
-        return self.datain["scene-collections"]
-
-
-class SetStreamSettings(base_classes.BaseRequest):
-    def __init__(self, type, settings, save, server, key, use_auth, username, password):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "SetStreamSettings"
-        self.datain["type"] = None
-        self.datain["settings"] = None
-        self.datain["server"] = None
-        self.datain["key"] = None
-        self.datain["use-auth"] = None
-        self.datain["username"] = None
-        self.datain["password"] = None
-        self.dataout["type"] = type
-        self.dataout["settings"] = settings
-        self.dataout["save"] = save
-        self.dataout["server"] = server
-        self.dataout["key"] = key
-        self.dataout["use-auth"] = use_auth
-        self.dataout["username"] = username
-        self.dataout["password"] = password
-
-    def getType(self):
-        return self.datain["type"]
-
-    def getSettings(self):
-        return self.datain["settings"]
-
-    def getServer(self):
-        return self.datain["server"]
-
-    def getKey(self):
-        return self.datain["key"]
-
-    def getUseAuth(self):
-        return self.datain["use-auth"]
-
-    def getUsername(self):
-        return self.datain["username"]
-
-    def getPassword(self):
-        return self.datain["password"]
-
-
-class SetCurrentProfile(base_classes.BaseRequest):
-    def __init__(self, profile_name):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "SetCurrentProfile"
-        self.dataout["profile-name"] = profile_name
-
-
-class GetCurrentProfile(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "GetCurrentProfile"
-        self.datain["profile-name"] = None
-
-    def getProfileName(self):
-        return self.datain["profile-name"]
-
-
-class ListProfiles(base_classes.BaseRequest):
-    def __init__(self):
-        base_classes.BaseRequest.__init__(self)
-        self.name = "ListProfiles"
-        self.datain["profiles"] = None
-
-    def getProfiles(self):
-        return self.datain["profiles"]
-
-
-class GetTextGDIPlusProperties(base_classes.BaseRequest):
-    def __init__(self, source, scene_name):
-        base_classes.BaseRequest.__init__(self)
+    :Arguments:
+       *scene-name*
+            type: String (optional)
+            Name of the scene to retrieve. Defaults to the current scene.
+       *source*
+            type: String
+            Name of the source.
+    :Returns:
+       *align*
+            type: String
+            Text Alignment ("left", "center", "right").
+       *bk-color*
+            type: int
+            Background color.
+       *bk-opacity*
+            type: int
+            Background opacity (0-100).
+       *chatlog*
+            type: boolean
+            Chat log.
+       *chatlog_lines*
+            type: int
+            Chat log lines.
+       *color*
+            type: int
+            Text color.
+       *extents*
+            type: boolean
+            Extents wrap.
+       *extents_cx*
+            type: int
+            Extents cx.
+       *extents_cy*
+            type: int
+            Extents cy.
+       *file*
+            type: String
+            File path name.
+       *read_from_file*
+            type: boolean
+            Read text from the specified file.
+       *font*
+            type: Object
+            Holds data for the font. Ex: `"font": { "face": "Arial", "flags": 0, "size": 150, "style": "" }`
+       *font.face*
+            type: String
+            Font face.
+       *font.flags*
+            type: int
+            Font text styling flag. `Bold=1, Italic=2, Bold Italic=3, Underline=5, Strikeout=8`
+       *font.size*
+            type: int
+            Font text size.
+       *font.style*
+            type: String
+            Font Style (unknown function).
+       *gradient*
+            type: boolean
+            Gradient enabled.
+       *gradient_color*
+            type: int
+            Gradient color.
+       *gradient_dir*
+            type: float
+            Gradient direction.
+       *gradient_opacity*
+            type: int
+            Gradient opacity (0-100).
+       *outline*
+            type: boolean
+            Outline.
+       *outline_color*
+            type: int
+            Outline color.
+       *outline_size*
+            type: int
+            Outline size.
+       *outline_opacity*
+            type: int
+            Outline opacity (0-100).
+       *text*
+            type: String
+            Text content to be displayed.
+       *valign*
+            type: String
+            Text vertical alignment ("top", "center", "bottom").
+       *vertical*
+            type: boolean
+            Vertical text enabled.
+       *render*
+            type: boolean
+            Visibility of the scene item.
+    """
+    def __init__(self, source, scene_name = None):
+        base_classes.Baserequests.__init__(self)
         self.name = "GetTextGDIPlusProperties"
         self.datain["align"] = None
+        self.datain["bk_color"] = None
+        self.datain["bk_opacity"] = None
         self.datain["chatlog"] = None
+        self.datain["chatlog_lines"] = None
         self.datain["color"] = None
         self.datain["extents"] = None
+        self.datain["extents_cx"] = None
+        self.datain["extents_cy"] = None
         self.datain["file"] = None
+        self.datain["read_from_file"] = None
         self.datain["font"] = None
-        self.datain["face"] = None
-        self.datain["flags"] = None
-        self.datain["size"] = None
-        self.datain["style"] = None
+        self.datain["font_face"] = None
+        self.datain["font_flags"] = None
+        self.datain["font_size"] = None
+        self.datain["font_style"] = None
         self.datain["gradient"] = None
+        self.datain["gradient_color"] = None
+        self.datain["gradient_dir"] = None
+        self.datain["gradient_opacity"] = None
         self.datain["outline"] = None
+        self.datain["outline_color"] = None
+        self.datain["outline_size"] = None
+        self.datain["outline_opacity"] = None
         self.datain["text"] = None
         self.datain["valign"] = None
         self.datain["vertical"] = None
         self.datain["render"] = None
         self.dataout["source"] = source
-        self.dataout["scene-name"] = scene_name
+        self.dataout["scene_name"] = scene_name
 
     def getAlign(self):
         return self.datain["align"]
 
+    def getBk_color(self):
+        return self.datain["bk_color"]
+
+    def getBk_opacity(self):
+        return self.datain["bk_opacity"]
+
     def getChatlog(self):
         return self.datain["chatlog"]
+
+    def getChatlog_lines(self):
+        return self.datain["chatlog_lines"]
 
     def getColor(self):
         return self.datain["color"]
@@ -540,29 +430,56 @@ class GetTextGDIPlusProperties(base_classes.BaseRequest):
     def getExtents(self):
         return self.datain["extents"]
 
+    def getExtents_cx(self):
+        return self.datain["extents_cx"]
+
+    def getExtents_cy(self):
+        return self.datain["extents_cy"]
+
     def getFile(self):
         return self.datain["file"]
+
+    def getRead_from_file(self):
+        return self.datain["read_from_file"]
 
     def getFont(self):
         return self.datain["font"]
 
-    def getFace(self):
-        return self.datain["face"]
+    def getFont_face(self):
+        return self.datain["font_face"]
 
-    def getFlags(self):
-        return self.datain["flags"]
+    def getFont_flags(self):
+        return self.datain["font_flags"]
 
-    def getSize(self):
-        return self.datain["size"]
+    def getFont_size(self):
+        return self.datain["font_size"]
 
-    def getStyle(self):
-        return self.datain["style"]
+    def getFont_style(self):
+        return self.datain["font_style"]
 
     def getGradient(self):
         return self.datain["gradient"]
 
+    def getGradient_color(self):
+        return self.datain["gradient_color"]
+
+    def getGradient_dir(self):
+        return self.datain["gradient_dir"]
+
+    def getGradient_opacity(self):
+        return self.datain["gradient_opacity"]
+
     def getOutline(self):
         return self.datain["outline"]
+
+    def getOutline_color(self):
+        return self.datain["outline_color"]
+
+    def getOutline_size(self):
+        return self.datain["outline_size"]
+
+    def getOutline_opacity(self):
+        return self.datain["outline_opacity"]
 
     def getText(self):
         return self.datain["text"]
@@ -577,34 +494,176 @@ class GetTextGDIPlusProperties(base_classes.BaseRequest):
         return self.datain["render"]
 
 
-class SetTextGDIPlusProperties(base_classes.BaseRequest):
-    def __init__(self, source, scene_name, align, chatlog, color, extents, file, font, face, flags, size, style, gradient, outline, text, valign, vertical, render):
-        base_classes.BaseRequest.__init__(self)
+class SetTextGDIPlusProperties(base_classes.Baserequests):
+    """Get the current properties of a Text GDI Plus source.
+
+    :Arguments:
+       *scene-name*
+            type: String (optional)
+            Name of the scene to retrieve. Defaults to the current scene.
+       *source*
+            type: String
+            Name of the source.
+       *align*
+            type: String (optional)
+            Text Alignment ("left", "center", "right").
+       *bk-color*
+            type: int (optional)
+            Background color.
+       *bk-opacity*
+            type: int (optional)
+            Background opacity (0-100).
+       *chatlog*
+            type: boolean (optional)
+            Chat log.
+       *chatlog_lines*
+            type: int (optional)
+            Chat log lines.
+       *color*
+            type: int (optional)
+            Text color.
+       *extents*
+            type: boolean (optional)
+            Extents wrap.
+       *extents_cx*
+            type: int (optional)
+            Extents cx.
+       *extents_cy*
+            type: int (optional)
+            Extents cy.
+       *file*
+            type: String (optional)
+            File path name.
+       *read_from_file*
+            type: boolean (optional)
+            Read text from the specified file.
+       *font*
+            type: Object (optional)
+            Holds data for the font. Ex: `"font": { "face": "Arial", "flags": 0, "size": 150, "style": "" }`
+       *font.face*
+            type: String (optional)
+            Font face.
+       *font.flags*
+            type: int (optional)
+            Font text styling flag. `Bold=1, Italic=2, Bold Italic=3, Underline=5, Strikeout=8`
+       *font.size*
+            type: int (optional)
+            Font text size.
+       *font.style*
+            type: String (optional)
+            Font Style (unknown function).
+       *gradient*
+            type: boolean (optional)
+            Gradient enabled.
+       *gradient_color*
+            type: int (optional)
+            Gradient color.
+       *gradient_dir*
+            type: float (optional)
+            Gradient direction.
+       *gradient_opacity*
+            type: int (optional)
+            Gradient opacity (0-100).
+       *outline*
+            type: boolean (optional)
+            Outline.
+       *outline_color*
+            type: int (optional)
+            Outline color.
+       *outline_size*
+            type: int (optional)
+            Outline size.
+       *outline_opacity*
+            type: int (optional)
+            Outline opacity (0-100).
+       *text*
+            type: String (optional)
+            Text content to be displayed.
+       *valign*
+            type: String (optional)
+            Text vertical alignment ("top", "center", "bottom").
+       *vertical*
+            type: boolean (optional)
+            Vertical text enabled.
+       *render*
+            type: boolean (optional)
+            Visibility of the scene item.
+    """
+    def __init__(self, source, scene_name = None, align = None, bk_color = None, bk_opacity = None, chatlog = None, chatlog_lines = None, color = None, extents = None, extents_cx = None, extents_cy = None, file = None, read_from_file = None, font = None, font_face = None, font_flags = None, font_size = None, font_style = None, gradient = None, gradient_color = None, gradient_dir = None, gradient_opacity = None, outline = None, outline_color = None, outline_size = None, outline_opacity = None, text = None, valign = None, vertical = None, render = None):
+        base_classes.Baserequests.__init__(self)
         self.name = "SetTextGDIPlusProperties"
         self.dataout["source"] = source
-        self.dataout["scene-name"] = scene_name
+        self.dataout["scene_name"] = scene_name
         self.dataout["align"] = align
+        self.dataout["bk_color"] = bk_color
+        self.dataout["bk_opacity"] = bk_opacity
         self.dataout["chatlog"] = chatlog
+        self.dataout["chatlog_lines"] = chatlog_lines
         self.dataout["color"] = color
         self.dataout["extents"] = extents
+        self.dataout["extents_cx"] = extents_cx
+        self.dataout["extents_cy"] = extents_cy
         self.dataout["file"] = file
+        self.dataout["read_from_file"] = read_from_file
         self.dataout["font"] = font
-        self.dataout["face"] = face
-        self.dataout["flags"] = flags
-        self.dataout["size"] = size
-        self.dataout["style"] = style
+        self.dataout["font_face"] = font_face
+        self.dataout["font_flags"] = font_flags
+        self.dataout["font_size"] = font_size
+        self.dataout["font_style"] = font_style
         self.dataout["gradient"] = gradient
+        self.dataout["gradient_color"] = gradient_color
+        self.dataout["gradient_dir"] = gradient_dir
+        self.dataout["gradient_opacity"] = gradient_opacity
         self.dataout["outline"] = outline
+        self.dataout["outline_color"] = outline_color
+        self.dataout["outline_size"] = outline_size
+        self.dataout["outline_opacity"] = outline_opacity
         self.dataout["text"] = text
         self.dataout["valign"] = valign
         self.dataout["vertical"] = vertical
         self.dataout["render"] = render
 
 
-class GetBrowserSourceProperties(base_classes.BaseRequest):
-    def __init__(self, source, scene_name):
-        base_classes.BaseRequest.__init__(self)
+class GetBrowserSourceProperties(base_classes.Baserequests):
+    """Get current properties for a Browser Source.
+
+    :Arguments:
+       *scene-name*
+            type: String (optional)
+            Name of the scene that the source belongs to. Defaults to the current scene.
+       *source*
+            type: String
+            Name of the source.
+    :Returns:
+       *is_local_file*
+            type: boolean
+            Indicates that a local file is in use.
+       *url*
+            type: String
+            Url or file path.
+       *css*
+            type: String
+            CSS to inject.
+       *width*
+            type: int
+            Width.
+       *height*
+            type: int
+            Height.
+       *fps*
+            type: int
+            Framerate.
+       *shutdown*
+            type: boolean
+            Indicates whether the source should be shutdown when not visible.
+       *render*
+            type: boolean (optional)
+            Visibility of the scene item.
+    """
+    def __init__(self, source, scene_name = None):
+        base_classes.Baserequests.__init__(self)
         self.name = "GetBrowserSourceProperties"
+        self.datain["is_local_file"] = None
         self.datain["url"] = None
         self.datain["css"] = None
         self.datain["width"] = None
@@ -613,7 +672,10 @@ class GetBrowserSourceProperties(base_classes.BaseRequest):
         self.datain["shutdown"] = None
         self.datain["render"] = None
         self.dataout["source"] = source
-        self.dataout["scene-name"] = scene_name
+        self.dataout["scene_name"] = scene_name
+
+    def getIs_local_file(self):
+        return self.datain["is_local_file"]
 
     def getUrl(self):
         return self.datain["url"]
@@ -637,12 +699,47 @@ class GetBrowserSourceProperties(base_classes.BaseRequest):
         return self.datain["render"]
 
 
-class SetBrowserSourceProperties(base_classes.BaseRequest):
-    def __init__(self, source, scene_name, url, css, width, height, fps, shutdown, render):
-        base_classes.BaseRequest.__init__(self)
+class SetBrowserSourceProperties(base_classes.Baserequests):
+    """Set current properties for a Browser Source.
+
+    :Arguments:
+       *scene-name*
+            type: String (optional)
+            Name of the scene that the source belongs to. Defaults to the current scene.
+       *source*
+            type: String
+            Name of the source.
+       *is_local_file*
+            type: boolean (optional)
+            Indicates that a local file is in use.
+       *url*
+            type: String (optional)
+            Url or file path.
+       *css*
+            type: String (optional)
+            CSS to inject.
+       *width*
+            type: int (optional)
+            Width.
+       *height*
+            type: int (optional)
+            Height.
+       *fps*
+            type: int (optional)
+            Framerate.
+       *shutdown*
+            type: boolean (optional)
+            Indicates whether the source should be shutdown when not visible.
+       *render*
+            type: boolean (optional)
+            Visibility of the scene item.
+    """
+    def __init__(self, source, scene_name = None, is_local_file = None, url = None, css = None, width = None, height = None, fps = None, shutdown = None, render = None):
+        base_classes.Baserequests.__init__(self)
         self.name = "SetBrowserSourceProperties"
         self.dataout["source"] = source
-        self.dataout["scene-name"] = scene_name
+        self.dataout["scene_name"] = scene_name
+        self.dataout["is_local_file"] = is_local_file
         self.dataout["url"] = url
         self.dataout["css"] = css
         self.dataout["width"] = width
@@ -650,5 +747,824 @@ class SetBrowserSourceProperties(base_classes.BaseRequest):
         self.dataout["fps"] = fps
         self.dataout["shutdown"] = shutdown
         self.dataout["render"] = render
+
+
+class ResetSceneItem(base_classes.Baserequests):
+    """Reset a source item.
+
+    :Arguments:
+       *scene-name*
+            type: String (optional)
+            Name of the scene the source belogns to. Defaults to the current scene.
+       *item*
+            type: String
+            Name of the source item.
+    """
+    def __init__(self, item, scene_name = None):
+        base_classes.Baserequests.__init__(self)
+        self.name = "ResetSceneItem"
+        self.dataout["item"] = item
+        self.dataout["scene_name"] = scene_name
+
+
+class GetStudioModeStatus(base_classes.Baserequests):
+    """Indicates if Studio Mode is currently enabled.
+
+    :Returns:
+       *studio-mode*
+            type: boolean
+            Indicates if Studio Mode is enabled.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetStudioModeStatus"
+        self.datain["studio_mode"] = None
+
+    def getStudio_mode(self):
+        return self.datain["studio_mode"]
+
+
+class GetPreviewScene(base_classes.Baserequests):
+    """Get the name of the currently previewed scene and its list of sources.
+Will return an `error` if Studio Mode is not enabled.
+
+    :Returns:
+       *name*
+            type: String
+            The name of the active preview scene.
+       *sources*
+            type: Source|Array
+            
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetPreviewScene"
+        self.datain["name"] = None
+        self.datain["sources"] = None
+
+    def getName(self):
+        return self.datain["name"]
+
+    def getSources(self):
+        return self.datain["sources"]
+
+
+class SetPreviewScene(base_classes.Baserequests):
+    """Set the active preview scene.
+Will return an `error` if Studio Mode is not enabled.
+
+    :Arguments:
+       *scene-name*
+            type: String
+            The name of the scene to preview.
+    """
+    def __init__(self, scene_name):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetPreviewScene"
+        self.dataout["scene_name"] = scene_name
+
+
+class TransitionToProgram(base_classes.Baserequests):
+    """Transitions the currently previewed scene to the main output.
+Will return an `error` if Studio Mode is not enabled.
+
+    :Arguments:
+       *with-transition*
+            type: Object (optional)
+            Change the active transition before switching scenes. Defaults to the active transition.
+       *with-transition.name*
+            type: String
+            Name of the transition.
+       *with-transition.duration*
+            type: int (optional)
+            Transition duration (in milliseconds).
+    """
+    def __init__(self, with_transition_name, with_transition = None, with_transition_duration = None):
+        base_classes.Baserequests.__init__(self)
+        self.name = "TransitionToProgram"
+        self.dataout["with_transition_name"] = with_transition_name
+        self.dataout["with_transition"] = with_transition
+        self.dataout["with_transition_duration"] = with_transition_duration
+
+
+class EnableStudioMode(base_classes.Baserequests):
+    """Enables Studio Mode.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "EnableStudioMode"
+
+
+class DisableStudioMode(base_classes.Baserequests):
+    """Disables Studio Mode.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "DisableStudioMode"
+
+
+class ToggleStudioMode(base_classes.Baserequests):
+    """Toggles Studio Mode.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "ToggleStudioMode"
+
+
+class GetSpecialSources(base_classes.Baserequests):
+    """Get configured special sources like Desktop Audio and Mic/Aux sources.
+
+    :Returns:
+       *desktop-1*
+            type: String (optional)
+            Name of the first Desktop Audio capture source.
+       *desktop-2*
+            type: String (optional)
+            Name of the second Desktop Audio capture source.
+       *mic-1*
+            type: String (optional)
+            Name of the first Mic/Aux input source.
+       *mic-2*
+            type: String (optional)
+            Name of the second Mic/Aux input source.
+       *mic-3*
+            type: String (optional)
+            NAme of the third Mic/Aux input source.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetSpecialSources"
+        self.datain["desktop_1"] = None
+        self.datain["desktop_2"] = None
+        self.datain["mic_1"] = None
+        self.datain["mic_2"] = None
+        self.datain["mic_3"] = None
+
+    def getDesktop_1(self):
+        return self.datain["desktop_1"]
+
+    def getDesktop_2(self):
+        return self.datain["desktop_2"]
+
+    def getMic_1(self):
+        return self.datain["mic_1"]
+
+    def getMic_2(self):
+        return self.datain["mic_2"]
+
+    def getMic_3(self):
+        return self.datain["mic_3"]
+
+
+class SetStreamingSettings(base_classes.Baserequests):
+    """Sets one or more attributes of the current streaming server settings. Any options not passed will remain unchanged. Returns the updated settings in response. If 'type' is different than the current streaming service type, all settings are required. Returns the full settings of the stream (the same as GetStreamSettings).
+
+    :Arguments:
+       *type*
+            type: String
+            The type of streaming service configuration, usually `rtmp_custom` or `rtmp_common`.
+       *settings*
+            type: Object
+            The actual settings of the stream.
+       *settings.server*
+            type: String (optional)
+            The publish URL.
+       *settings.key*
+            type: String (optional)
+            The publish key.
+       *settings.use-auth*
+            type: boolean (optional)
+            Indicates whether authentication should be used when connecting to the streaming server.
+       *settings.username*
+            type: String (optional)
+            The username for the streaming service.
+       *settings.password*
+            type: String (optional)
+            The password for the streaming service.
+       *save*
+            type: boolean
+            Persist the settings to disk.
+    """
+    def __init__(self, type, settings, save, settings_server = None, settings_key = None, settings_use_auth = None, settings_username = None, settings_password = None):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetStreamingSettings"
+        self.dataout["type"] = type
+        self.dataout["settings"] = settings
+        self.dataout["save"] = save
+        self.dataout["settings_server"] = settings_server
+        self.dataout["settings_key"] = settings_key
+        self.dataout["settings_use_auth"] = settings_use_auth
+        self.dataout["settings_username"] = settings_username
+        self.dataout["settings_password"] = settings_password
+
+
+class GetStreamSettings(base_classes.Baserequests):
+    """Get the current streaming server settings.
+
+    :Returns:
+       *type*
+            type: String
+            The type of streaming service configuration. Usually 'rtmp_custom' or 'rtmp_common'.
+       *settings*
+            type: Object
+            Setings of the stream.
+       *settings.server*
+            type: String
+            The publish URL.
+       *settings.key*
+            type: String
+            The publish key of the stream.
+       *settings.use-auth*
+            type: boolean
+            Indicates whether audentication should be used when connecting to the streaming server.
+       *settings.username*
+            type: String
+            The username to use when accessing the streaming server. Only present if `use-auth` is `true`.
+       *settings.password*
+            type: String
+            The password to use when accessing the streaming server. Only present if `use-auth` is `true`.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetStreamSettings"
+        self.datain["type"] = None
+        self.datain["settings"] = None
+        self.datain["settings_server"] = None
+        self.datain["settings_key"] = None
+        self.datain["settings_use_auth"] = None
+        self.datain["settings_username"] = None
+        self.datain["settings_password"] = None
+
+    def getType(self):
+        return self.datain["type"]
+
+    def getSettings(self):
+        return self.datain["settings"]
+
+    def getSettings_server(self):
+        return self.datain["settings_server"]
+
+    def getSettings_key(self):
+        return self.datain["settings_key"]
+
+    def getSettings_use_auth(self):
+        return self.datain["settings_use_auth"]
+
+    def getSettings_username(self):
+        return self.datain["settings_username"]
+
+    def getSettings_password(self):
+        return self.datain["settings_password"]
+
+
+class SaveStreamSettings(base_classes.Baserequests):
+    """Save the current streaming server settings to disk.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SaveStreamSettings"
+
+
+class StartStopReplayBuffer(base_classes.Baserequests):
+    """Toggle the Replay Buffer on/off.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StartStopReplayBuffer"
+
+
+class StartReplayBuffer(base_classes.Baserequests):
+    """Start recording into the Replay Buffer.
+Will return an `error` if the Replay Buffer is already active or if the
+"Save Replay Buffer" hotkey is not set in OBS' settings.
+Setting this hotkey is mandatory, even when triggering saves only
+through obs-websocket.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StartReplayBuffer"
+
+
+class StopReplayBuffer(base_classes.Baserequests):
+    """Stop recording into the Replay Buffer.
+Will return an `error` if the Replay Buffer is not active.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StopReplayBuffer"
+
+
+class SaveReplayBuffer(base_classes.Baserequests):
+    """Save and flush the contents of the Replay Buffer to disk. This is
+basically the same as triggering the "Save Replay Buffer" hotkey.
+Will return an `error` if the Replay Buffer is not active.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SaveReplayBuffer"
+
+
+class SetCurrentScene(base_classes.Baserequests):
+    """Switch to the specified scene.
+
+    :Arguments:
+       *scene-name*
+            type: String
+            Name of the scene to switch to.
+    """
+    def __init__(self, scene_name):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetCurrentScene"
+        self.dataout["scene_name"] = scene_name
+
+
+class GetCurrentScene(base_classes.Baserequests):
+    """Get the current scene's name and source items.
+
+    :Returns:
+       *name*
+            type: String
+            Name of the currently active scene.
+       *sources*
+            type: Source|Array
+            Ordered list of the current scene's source items.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetCurrentScene"
+        self.datain["name"] = None
+        self.datain["sources"] = None
+
+    def getName(self):
+        return self.datain["name"]
+
+    def getSources(self):
+        return self.datain["sources"]
+
+
+class GetSceneList(base_classes.Baserequests):
+    """Get a list of scenes in the currently active profile.
+
+    :Returns:
+       *current-scene*
+            type: String
+            Name of the currently active scene.
+       *scenes*
+            type: Scene|Array
+            Ordered list of the current profile's scenes (See `[GetCurrentScene](#getcurrentscene)` for more information).
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetSceneList"
+        self.datain["current_scene"] = None
+        self.datain["scenes"] = None
+
+    def getCurrent_scene(self):
+        return self.datain["current_scene"]
+
+    def getScenes(self):
+        return self.datain["scenes"]
+
+
+class SetCurrentProfile(base_classes.Baserequests):
+    """Set the currently active profile.
+
+    :Arguments:
+       *profile-name*
+            type: String
+            Name of the desired profile.
+    """
+    def __init__(self, profile_name):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetCurrentProfile"
+        self.dataout["profile_name"] = profile_name
+
+
+class GetCurrentProfile(base_classes.Baserequests):
+    """Get the name of the current profile.
+
+    :Returns:
+       *profile-name*
+            type: String
+            Name of the currently active profile.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetCurrentProfile"
+        self.datain["profile_name"] = None
+
+    def getProfile_name(self):
+        return self.datain["profile_name"]
+
+
+class ListProfiles(base_classes.Baserequests):
+    """Get a list of available profiles.
+
+    :Returns:
+       *profiles*
+            type: Object|Array
+            List of available profiles.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "ListProfiles"
+        self.datain["profiles"] = None
+
+    def getProfiles(self):
+        return self.datain["profiles"]
+
+
+class GetVersion(base_classes.Baserequests):
+    """Returns the latest version of the plugin and the API.
+
+    :Returns:
+       *version*
+            type: double
+            OBSRemote compatible API version. Fixed to 1.1 for retrocompatibility.
+       *obs-websocket-version*
+            type: String
+            obs-websocket plugin version.
+       *obs-studio-version*
+            type: String
+            OBS Studio program version.
+       *available-requests*
+            type: String|Array
+            List of available request types.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetVersion"
+        self.datain["version"] = None
+        self.datain["obs_websocket_version"] = None
+        self.datain["obs_studio_version"] = None
+        self.datain["available_requests"] = None
+
+    def getVersion(self):
+        return self.datain["version"]
+
+    def getObs_websocket_version(self):
+        return self.datain["obs_websocket_version"]
+
+    def getObs_studio_version(self):
+        return self.datain["obs_studio_version"]
+
+    def getAvailable_requests(self):
+        return self.datain["available_requests"]
+
+
+class GetAuthRequired(base_classes.Baserequests):
+    """Tells the client if authentication is required. If so, returns authentication parameters `challenge`
+and `salt` (see "Authentication" for more information).
+
+    :Returns:
+       *authRequired*
+            type: boolean
+            Indicates whether authentication is required.
+       *challenge*
+            type: String (optional)
+            
+       *salt*
+            type: String (optional)
+            
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetAuthRequired"
+        self.datain["authRequired"] = None
+        self.datain["challenge"] = None
+        self.datain["salt"] = None
+
+    def getAuthrequired(self):
+        return self.datain["authRequired"]
+
+    def getChallenge(self):
+        return self.datain["challenge"]
+
+    def getSalt(self):
+        return self.datain["salt"]
+
+
+class Authenticate(base_classes.Baserequests):
+    """Attempt to authenticate the client to the server.
+
+    :Arguments:
+       *auth*
+            type: String
+            Response to the auth challenge (see "Authentication" for more information).
+    """
+    def __init__(self, auth):
+        base_classes.Baserequests.__init__(self)
+        self.name = "Authenticate"
+        self.dataout["auth"] = auth
+
+
+class StartStopRecording(base_classes.Baserequests):
+    """Toggle recording on or off.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StartStopRecording"
+
+
+class StartRecording(base_classes.Baserequests):
+    """Start recording.
+Will return an `error` if recording is already active.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StartRecording"
+
+
+class StopRecording(base_classes.Baserequests):
+    """Stop recording.
+Will return an `error` if recording is not active.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StopRecording"
+
+
+class SetRecordingFolder(base_classes.Baserequests):
+    """Change the current recording folder.
+
+    :Arguments:
+       *rec-folder*
+            type: Stsring
+            Path of the recording folder.
+    """
+    def __init__(self, rec_folder):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetRecordingFolder"
+        self.dataout["rec_folder"] = rec_folder
+
+
+class GetRecordingFolder(base_classes.Baserequests):
+    """Get the path of  the current recording folder.
+
+    :Returns:
+       *rec-folder*
+            type: String
+            Path of the recording folder.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetRecordingFolder"
+        self.datain["rec_folder"] = None
+
+    def getRec_folder(self):
+        return self.datain["rec_folder"]
+
+
+class GetStreamingStatus(base_classes.Baserequests):
+    """Get current streaming and recording status.
+
+    :Returns:
+       *streaming*
+            type: boolean
+            Current streaming status.
+       *recording*
+            type: boolean
+            Current recording status.
+       *stream-timecode*
+            type: String (optional)
+            Time elapsed since streaming started (only present if currently streaming).
+       *rec-timecode*
+            type: String (optional)
+            Time elapsed since recording started (only present if currently recording).
+       *preview-only*
+            type: boolean
+            Always false. Retrocompatibility with OBSRemote.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetStreamingStatus"
+        self.datain["streaming"] = None
+        self.datain["recording"] = None
+        self.datain["stream_timecode"] = None
+        self.datain["rec_timecode"] = None
+        self.datain["preview_only"] = None
+
+    def getStreaming(self):
+        return self.datain["streaming"]
+
+    def getRecording(self):
+        return self.datain["recording"]
+
+    def getStream_timecode(self):
+        return self.datain["stream_timecode"]
+
+    def getRec_timecode(self):
+        return self.datain["rec_timecode"]
+
+    def getPreview_only(self):
+        return self.datain["preview_only"]
+
+
+class StartStopStreaming(base_classes.Baserequests):
+    """Toggle streaming on or off.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StartStopStreaming"
+
+
+class StartStreaming(base_classes.Baserequests):
+    """Start streaming.
+Will return an `error` if streaming is already active.
+
+    :Arguments:
+       *stream*
+            type: Object (optional)
+            Special stream configuration.
+       *type*
+            type: String (optional)
+            If specified ensures the type of stream matches the given type (usually 'rtmp_custom' or 'rtmp_common'). If the currently configured stream type does not match the given stream type, all settings must be specified in the `settings` object or an error will occur when starting the stream.
+       *metadata*
+            type: Object (optional)
+            Adds the given object parameters as encoded query string parameters to the 'key' of the RTMP stream. Used to pass data to the RTMP service about the streaming. May be any String, Numeric, or Boolean field.
+       *settings*
+            type: Object (optional)
+            Settings for the stream.
+       *settings.server*
+            type: String (optional)
+            The publish URL.
+       *settings.key*
+            type: String (optional)
+            The publish key of the stream.
+       *settings.use-auth*
+            type: boolean (optional)
+            Indicates whether authentication should be used when connecting to the streaming server.
+       *settings.username*
+            type: String (optional)
+            If authentication is enabled, the username for the streaming server. Ignored if `use-auth` is not set to `true`.
+       *settings.password*
+            type: String (optional)
+            If authentication is enabled, the password for the streaming server. Ignored if `use-auth` is not set to `true`.
+    """
+    def __init__(self, stream = None, type = None, metadata = None, settings = None, settings_server = None, settings_key = None, settings_use_auth = None, settings_username = None, settings_password = None):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StartStreaming"
+        self.dataout["stream"] = stream
+        self.dataout["type"] = type
+        self.dataout["metadata"] = metadata
+        self.dataout["settings"] = settings
+        self.dataout["settings_server"] = settings_server
+        self.dataout["settings_key"] = settings_key
+        self.dataout["settings_use_auth"] = settings_use_auth
+        self.dataout["settings_username"] = settings_username
+        self.dataout["settings_password"] = settings_password
+
+
+class StopStreaming(base_classes.Baserequests):
+    """Stop streaming.
+Will return an `error` if streaming is not active.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StopStreaming"
+
+
+class SetCurrentSceneCollection(base_classes.Baserequests):
+    """Change the active scene collection.
+
+    :Arguments:
+       *sc-name*
+            type: String
+            Name of the desired scene collection.
+    """
+    def __init__(self, sc_name):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetCurrentSceneCollection"
+        self.dataout["sc_name"] = sc_name
+
+
+class GetCurrentSceneCollection(base_classes.Baserequests):
+    """Get the name of the current scene collection.
+
+    :Returns:
+       *sc-name*
+            type: String
+            Name of the currently active scene collection.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetCurrentSceneCollection"
+        self.datain["sc_name"] = None
+
+    def getSc_name(self):
+        return self.datain["sc_name"]
+
+
+class GetTransitionList(base_classes.Baserequests):
+    """List of all transitions available in the frontend's dropdown menu.
+
+    :Returns:
+       *current-transition*
+            type: String
+            Name of the currently active transition.
+       *transitions*
+            type: Object|Array
+            List of transitions.
+       *transitions[].name*
+            type: String
+            Name of the transition.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetTransitionList"
+        self.datain["current_transition"] = None
+        self.datain["transitions"] = None
+        self.datain["transitions_name"] = None
+
+    def getCurrent_transition(self):
+        return self.datain["current_transition"]
+
+    def getTransitions(self):
+        return self.datain["transitions"]
+
+    def getTransitions_name(self):
+        return self.datain["transitions_name"]
+
+
+class GetCurrentTransition(base_classes.Baserequests):
+    """Get the name of the currently selected transition in the frontend's dropdown menu.
+
+    :Returns:
+       *name*
+            type: String
+            Name of the selected transition.
+       *duration*
+            type: int (optional)
+            Transition duration (in milliseconds) if supported by the transition.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetCurrentTransition"
+        self.datain["name"] = None
+        self.datain["duration"] = None
+
+    def getName(self):
+        return self.datain["name"]
+
+    def getDuration(self):
+        return self.datain["duration"]
+
+
+class SetCurrentTransition(base_classes.Baserequests):
+    """Set the active transition.
+
+    :Arguments:
+       *transition-name*
+            type: String
+            The name of the transition.
+    """
+    def __init__(self, transition_name):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetCurrentTransition"
+        self.dataout["transition_name"] = transition_name
+
+
+class SetTransitionDuration(base_classes.Baserequests):
+    """Set the duration of the currently selected transition if supported.
+
+    :Arguments:
+       *duration*
+            type: int
+            Desired duration of the transition (in milliseconds).
+    """
+    def __init__(self, duration):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetTransitionDuration"
+        self.dataout["duration"] = duration
+
+
+class GetTransitionDuration(base_classes.Baserequests):
+    """Get the duration of the currently selected transition if supported.
+
+    :Returns:
+       *transition-duration*
+            type: int
+            Duration of the current transition (in milliseconds).
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetTransitionDuration"
+        self.datain["transition_duration"] = None
+
+    def getTransition_duration(self):
+        return self.datain["transition_duration"]
 
 
