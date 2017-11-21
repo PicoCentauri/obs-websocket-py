@@ -13,7 +13,7 @@ def toPyVar(string):
     return string
 
 
-import_url = "https://raw.githubusercontent.com/Palakis/obs-websocket/4.2.0/docs/generated/comments.json"
+import_url = "https://raw.githubusercontent.com/Palakis/obs-websocket/master/docs/generated/comments.json"
 
 if __name__ == '__main__':
     data = json.loads(six.moves.urllib.request.urlopen(import_url).read())

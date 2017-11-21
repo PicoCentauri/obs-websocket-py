@@ -5,6 +5,444 @@
 
 from . import base_classes
 
+class SwitchScenes(base_classes.Baseevents):
+    """Indicates a scene change.
+
+    :Returns:
+       *scene-name*
+            type: String
+            The new scene.
+       *sources*
+            type: Array
+            List of sources in the new scene.
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "SwitchScenes"
+        self.datain["scene_name"] = None
+        self.datain["sources"] = None
+
+    def getScene_name(self):
+        return self.datain["scene_name"]
+
+    def getSources(self):
+        return self.datain["sources"]
+
+
+class ScenesChanged(base_classes.Baseevents):
+    """The scene list has been modified.
+Scenes have been added, removed, or renamed.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "ScenesChanged"
+
+
+class SceneCollectionChanged(base_classes.Baseevents):
+    """Triggered when switching to another scene collection or when renaming the current scene collection.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "SceneCollectionChanged"
+
+
+class SceneCollectionListChanged(base_classes.Baseevents):
+    """Triggered when a scene collection is created, added, renamed, or removed.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "SceneCollectionListChanged"
+
+
+class SwitchTransition(base_classes.Baseevents):
+    """The active transition has been changed.
+
+    :Returns:
+       *transition-name*
+            type: String
+            The name of the new active transition.
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "SwitchTransition"
+        self.datain["transition_name"] = None
+
+    def getTransition_name(self):
+        return self.datain["transition_name"]
+
+
+class TransitionListChanged(base_classes.Baseevents):
+    """The list of available transitions has been modified.
+Transitions have been added, removed, or renamed.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "TransitionListChanged"
+
+
+class TransitionDurationChanged(base_classes.Baseevents):
+    """The active transition duration has been changed.
+
+    :Returns:
+       *new-duration*
+            type: int
+            New transition duration.
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "TransitionDurationChanged"
+        self.datain["new_duration"] = None
+
+    def getNew_duration(self):
+        return self.datain["new_duration"]
+
+
+class TransitionBegin(base_classes.Baseevents):
+    """A transition (other than "cut") has begun.
+
+    :Returns:
+       *name*
+            type: String
+            Transition name.
+       *duration*
+            type: int
+            Transition duration (in milliseconds).
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "TransitionBegin"
+        self.datain["name"] = None
+        self.datain["duration"] = None
+
+    def getName(self):
+        return self.datain["name"]
+
+    def getDuration(self):
+        return self.datain["duration"]
+
+
+class ProfileChanged(base_classes.Baseevents):
+    """Triggered when switching to another profile or when renaming the current profile.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "ProfileChanged"
+
+
+class ProfileListChanged(base_classes.Baseevents):
+    """Triggered when a profile is created, added, renamed, or removed.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "ProfileListChanged"
+
+
+class StreamStarting(base_classes.Baseevents):
+    """A request to start streaming has been issued.
+
+    :Returns:
+       *preview-only*
+            type: boolean
+            Always false (retrocompatibility).
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "StreamStarting"
+        self.datain["preview_only"] = None
+
+    def getPreview_only(self):
+        return self.datain["preview_only"]
+
+
+class StreamStarted(base_classes.Baseevents):
+    """Streaming started successfully.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "StreamStarted"
+
+
+class StreamStopping(base_classes.Baseevents):
+    """A request to stop streaming has been issued.
+
+    :Returns:
+       *preview-only*
+            type: boolean
+            Always false (retrocompatibility).
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "StreamStopping"
+        self.datain["preview_only"] = None
+
+    def getPreview_only(self):
+        return self.datain["preview_only"]
+
+
+class StreamStopped(base_classes.Baseevents):
+    """Streaming stopped successfully.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "StreamStopped"
+
+
+class StreamStatus(base_classes.Baseevents):
+    """Emit every 2 seconds.
+
+    :Returns:
+       *streaming*
+            type: boolean
+            Current streaming state.
+       *recording*
+            type: boolean
+            Current recording state.
+       *preview-only*
+            type: boolean
+            Always false (retrocompatibility).
+       *bytes-per-sec*
+            type: int
+            Amount of data per second (in bytes) transmitted by the stream encoder.
+       *kbits-per-sec*
+            type: int
+            Amount of data per second (in kilobits) transmitted by the stream encoder.
+       *strain*
+            type: double
+            Percentage of dropped frames.
+       *total-stream-time*
+            type: int
+            Total time (in seconds) since the stream started.
+       *num-total-frames*
+            type: int
+            Total number of frames transmitted since the stream started.
+       *num-dropped-frames*
+            type: int
+            Number of frames dropped by the encoder since the stream started.
+       *fps*
+            type: double
+            Current framerate.
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "StreamStatus"
+        self.datain["streaming"] = None
+        self.datain["recording"] = None
+        self.datain["preview_only"] = None
+        self.datain["bytes_per_sec"] = None
+        self.datain["kbits_per_sec"] = None
+        self.datain["strain"] = None
+        self.datain["total_stream_time"] = None
+        self.datain["num_total_frames"] = None
+        self.datain["num_dropped_frames"] = None
+        self.datain["fps"] = None
+
+    def getStreaming(self):
+        return self.datain["streaming"]
+
+    def getRecording(self):
+        return self.datain["recording"]
+
+    def getPreview_only(self):
+        return self.datain["preview_only"]
+
+    def getBytes_per_sec(self):
+        return self.datain["bytes_per_sec"]
+
+    def getKbits_per_sec(self):
+        return self.datain["kbits_per_sec"]
+
+    def getStrain(self):
+        return self.datain["strain"]
+
+    def getTotal_stream_time(self):
+        return self.datain["total_stream_time"]
+
+    def getNum_total_frames(self):
+        return self.datain["num_total_frames"]
+
+    def getNum_dropped_frames(self):
+        return self.datain["num_dropped_frames"]
+
+    def getFps(self):
+        return self.datain["fps"]
+
+
+class RecordingStarting(base_classes.Baseevents):
+    """A request to start recording has been issued.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "RecordingStarting"
+
+
+class RecordingStarted(base_classes.Baseevents):
+    """Recording started successfully.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "RecordingStarted"
+
+
+class RecordingStopping(base_classes.Baseevents):
+    """A request to stop recording has been issued.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "RecordingStopping"
+
+
+class RecordingStopped(base_classes.Baseevents):
+    """Recording stopped successfully.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "RecordingStopped"
+
+
+class ReplayStarting(base_classes.Baseevents):
+    """A request to start the replay buffer has been issued.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "ReplayStarting"
+
+
+class ReplayStarted(base_classes.Baseevents):
+    """Replay Buffer started successfully
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "ReplayStarted"
+
+
+class ReplayStopping(base_classes.Baseevents):
+    """A request to start the replay buffer has been issued.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "ReplayStopping"
+
+
+class ReplayStopped(base_classes.Baseevents):
+    """Replay Buffer stopped successfully
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "ReplayStopped"
+
+
+class Exiting(base_classes.Baseevents):
+    """OBS is exiting.
+
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "Exiting"
+
+
+class Heartbeat(base_classes.Baseevents):
+    """Emitted every 2 seconds after enabling it by calling SetHeartbeat.
+
+    :Returns:
+       *pulse*
+            type: boolean
+            Toggles between every JSON meassage as an "I am alive" indicator.
+       *current-profile*
+            type: string (optional)
+            Current active profile.
+       *current-scene*
+            type: string (optional)
+            Current active scene.
+       *streaming*
+            type: boolean (optional)
+            Current streaming state.
+       *total-stream-time*
+            type: int (optional)
+            Total time (in seconds) since the stream started.
+       *total-stream-bytes*
+            type: int (optional)
+            Total bytes sent since the stream started.
+       *total-stream-frames*
+            type: int (optional)
+            Total frames streamed since the stream started.
+       *recording*
+            type: boolean (optional)
+            Current recording state.
+       *total-record-time*
+            type: int (optional)
+            Total time (in seconds) since recording started.
+       *total-record-bytes*
+            type: int (optional)
+            Total bytes recorded since the recording started.
+       *total-record-frames*
+            type: int (optional)
+            Total frames recorded since the recording started.
+    """
+    def __init__(self):
+        base_classes.Baseevents.__init__(self)
+        self.name = "Heartbeat"
+        self.datain["pulse"] = None
+        self.datain["current_profile"] = None
+        self.datain["current_scene"] = None
+        self.datain["streaming"] = None
+        self.datain["total_stream_time"] = None
+        self.datain["total_stream_bytes"] = None
+        self.datain["total_stream_frames"] = None
+        self.datain["recording"] = None
+        self.datain["total_record_time"] = None
+        self.datain["total_record_bytes"] = None
+        self.datain["total_record_frames"] = None
+
+    def getPulse(self):
+        return self.datain["pulse"]
+
+    def getCurrent_profile(self):
+        return self.datain["current_profile"]
+
+    def getCurrent_scene(self):
+        return self.datain["current_scene"]
+
+    def getStreaming(self):
+        return self.datain["streaming"]
+
+    def getTotal_stream_time(self):
+        return self.datain["total_stream_time"]
+
+    def getTotal_stream_bytes(self):
+        return self.datain["total_stream_bytes"]
+
+    def getTotal_stream_frames(self):
+        return self.datain["total_stream_frames"]
+
+    def getRecording(self):
+        return self.datain["recording"]
+
+    def getTotal_record_time(self):
+        return self.datain["total_record_time"]
+
+    def getTotal_record_bytes(self):
+        return self.datain["total_record_bytes"]
+
+    def getTotal_record_frames(self):
+        return self.datain["total_record_frames"]
+
+
 class SourceOrderChanged(base_classes.Baseevents):
     """Scene items have been reordered.
 
@@ -140,356 +578,5 @@ class StudioModeSwitched(base_classes.Baseevents):
 
     def getNew_state(self):
         return self.datain["new_state"]
-
-
-class ReplayStarting(base_classes.Baseevents):
-    """A request to start the replay buffer has been issued.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "ReplayStarting"
-
-
-class ReplayStarted(base_classes.Baseevents):
-    """Replay Buffer started successfully
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "ReplayStarted"
-
-
-class ReplayStopping(base_classes.Baseevents):
-    """A request to start the replay buffer has been issued.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "ReplayStopping"
-
-
-class ReplayStopped(base_classes.Baseevents):
-    """Replay Buffer stopped successfully
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "ReplayStopped"
-
-
-class SwitchScenes(base_classes.Baseevents):
-    """Indicates a scene change.
-
-    :Returns:
-       *scene-name*
-            type: String
-            The new scene.
-       *sources*
-            type: Array
-            List of sources in the new scene.
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "SwitchScenes"
-        self.datain["scene_name"] = None
-        self.datain["sources"] = None
-
-    def getScene_name(self):
-        return self.datain["scene_name"]
-
-    def getSources(self):
-        return self.datain["sources"]
-
-
-class ScenesChanged(base_classes.Baseevents):
-    """The scene list has been modified.
-Scenes have been added, removed, or renamed.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "ScenesChanged"
-
-
-class SceneCollectionChanged(base_classes.Baseevents):
-    """Triggered when switching to another scene collection or when renaming the current scene collection.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "SceneCollectionChanged"
-
-
-class SceneCollectionListChanged(base_classes.Baseevents):
-    """Triggered when a scene collection is created, added, renamed, or removed.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "SceneCollectionListChanged"
-
-
-class ProfileChanged(base_classes.Baseevents):
-    """Triggered when switching to another profile or when renaming the current profile.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "ProfileChanged"
-
-
-class ProfileListChanged(base_classes.Baseevents):
-    """Triggered when a profile is created, added, renamed, or removed.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "ProfileListChanged"
-
-
-class RecordingStarting(base_classes.Baseevents):
-    """A request to start recording has been issued.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "RecordingStarting"
-
-
-class RecordingStarted(base_classes.Baseevents):
-    """Recording started successfully.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "RecordingStarted"
-
-
-class RecordingStopping(base_classes.Baseevents):
-    """A request to stop recording has been issued.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "RecordingStopping"
-
-
-class RecordingStopped(base_classes.Baseevents):
-    """Recording stopped successfully.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "RecordingStopped"
-
-
-class StreamStarting(base_classes.Baseevents):
-    """A request to start streaming has been issued.
-
-    :Returns:
-       *preview-only*
-            type: boolean
-            Always false (retrocompatibility).
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "StreamStarting"
-        self.datain["preview_only"] = None
-
-    def getPreview_only(self):
-        return self.datain["preview_only"]
-
-
-class StreamStarted(base_classes.Baseevents):
-    """Streaming started successfully.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "StreamStarted"
-
-
-class StreamStopping(base_classes.Baseevents):
-    """A request to stop streaming has been issued.
-
-    :Returns:
-       *preview-only*
-            type: boolean
-            Always false (retrocompatibility).
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "StreamStopping"
-        self.datain["preview_only"] = None
-
-    def getPreview_only(self):
-        return self.datain["preview_only"]
-
-
-class StreamStopped(base_classes.Baseevents):
-    """Streaming stopped successfully.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "StreamStopped"
-
-
-class StreamStatus(base_classes.Baseevents):
-    """Emit every 2 seconds.
-
-    :Returns:
-       *streaming*
-            type: boolean
-            Current streaming state.
-       *recording*
-            type: boolean
-            Current recording state.
-       *preview-only*
-            type: boolean
-            Always false (retrocompatibility).
-       *bytes-per-sec*
-            type: int
-            Amount of data per second (in bytes) transmitted by the stream encoder.
-       *kbits-per-sec*
-            type: int
-            Amount of data per second (in kilobits) transmitted by the stream encoder.
-       *strain*
-            type: double
-            Percentage of dropped frames.
-       *total-stream-time*
-            type: int
-            Total time (in seconds) since the stream started.
-       *num-total-frames*
-            type: int
-            Total number of frames transmitted since the stream started.
-       *num-dropped-frames*
-            type: int
-            Number of frames dropped by the encoder since the stream started.
-       *fps*
-            type: double
-            Current framerate.
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "StreamStatus"
-        self.datain["streaming"] = None
-        self.datain["recording"] = None
-        self.datain["preview_only"] = None
-        self.datain["bytes_per_sec"] = None
-        self.datain["kbits_per_sec"] = None
-        self.datain["strain"] = None
-        self.datain["total_stream_time"] = None
-        self.datain["num_total_frames"] = None
-        self.datain["num_dropped_frames"] = None
-        self.datain["fps"] = None
-
-    def getStreaming(self):
-        return self.datain["streaming"]
-
-    def getRecording(self):
-        return self.datain["recording"]
-
-    def getPreview_only(self):
-        return self.datain["preview_only"]
-
-    def getBytes_per_sec(self):
-        return self.datain["bytes_per_sec"]
-
-    def getKbits_per_sec(self):
-        return self.datain["kbits_per_sec"]
-
-    def getStrain(self):
-        return self.datain["strain"]
-
-    def getTotal_stream_time(self):
-        return self.datain["total_stream_time"]
-
-    def getNum_total_frames(self):
-        return self.datain["num_total_frames"]
-
-    def getNum_dropped_frames(self):
-        return self.datain["num_dropped_frames"]
-
-    def getFps(self):
-        return self.datain["fps"]
-
-
-class Exiting(base_classes.Baseevents):
-    """OBS is exiting.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "Exiting"
-
-
-class SwitchTransition(base_classes.Baseevents):
-    """The active transition has been changed.
-
-    :Returns:
-       *transition-name*
-            type: String
-            The name of the new active transition.
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "SwitchTransition"
-        self.datain["transition_name"] = None
-
-    def getTransition_name(self):
-        return self.datain["transition_name"]
-
-
-class TransitionListChanged(base_classes.Baseevents):
-    """The list of available transitions has been modified.
-Transitions have been added, removed, or renamed.
-
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "TransitionListChanged"
-
-
-class TransitionDurationChanged(base_classes.Baseevents):
-    """The active transition duration has been changed.
-
-    :Returns:
-       *new-duration*
-            type: int
-            New transition duration.
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "TransitionDurationChanged"
-        self.datain["new_duration"] = None
-
-    def getNew_duration(self):
-        return self.datain["new_duration"]
-
-
-class TransitionBegin(base_classes.Baseevents):
-    """A transition (other than "cut") has begun.
-
-    :Returns:
-       *name*
-            type: String
-            Transition name.
-       *duration*
-            type: int
-            Transition duration (in milliseconds).
-    """
-    def __init__(self):
-        base_classes.Baseevents.__init__(self)
-        self.name = "TransitionBegin"
-        self.datain["name"] = None
-        self.datain["duration"] = None
-
-    def getName(self):
-        return self.datain["name"]
-
-    def getDuration(self):
-        return self.datain["duration"]
 
 

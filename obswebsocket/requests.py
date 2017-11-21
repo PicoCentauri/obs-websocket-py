@@ -5,188 +5,557 @@
 
 from . import base_classes
 
-class SetSourceRender(base_classes.Baserequests):
+class GetVersion(base_classes.Baserequests):
+    """Returns the latest version of the plugin and the API.
+
+    :Returns:
+       *version*
+            type: double
+            OBSRemote compatible API version. Fixed to 1.1 for retrocompatibility.
+       *obs-websocket-version*
+            type: String
+            obs-websocket plugin version.
+       *obs-studio-version*
+            type: String
+            OBS Studio program version.
+       *available-requests*
+            type: String
+            List of available request types, formatted as a comma-separated list string (e.g. : "Method1,Method2,Method3").
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetVersion"
+        self.datain["version"] = None
+        self.datain["obs_websocket_version"] = None
+        self.datain["obs_studio_version"] = None
+        self.datain["available_requests"] = None
+
+    def getVersion(self):
+        return self.datain["version"]
+
+    def getObs_websocket_version(self):
+        return self.datain["obs_websocket_version"]
+
+    def getObs_studio_version(self):
+        return self.datain["obs_studio_version"]
+
+    def getAvailable_requests(self):
+        return self.datain["available_requests"]
+
+
+class GetAuthRequired(base_classes.Baserequests):
+    """Tells the client if authentication is required. If so, returns authentication parameters `challenge`
+and `salt` (see "Authentication" for more information).
+
+    :Returns:
+       *authRequired*
+            type: boolean
+            Indicates whether authentication is required.
+       *challenge*
+            type: String (optional)
+            
+       *salt*
+            type: String (optional)
+            
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetAuthRequired"
+        self.datain["authRequired"] = None
+        self.datain["challenge"] = None
+        self.datain["salt"] = None
+
+    def getAuthrequired(self):
+        return self.datain["authRequired"]
+
+    def getChallenge(self):
+        return self.datain["challenge"]
+
+    def getSalt(self):
+        return self.datain["salt"]
+
+
+class Authenticate(base_classes.Baserequests):
+    """Attempt to authenticate the client to the server.
+
+    :Arguments:
+       *auth*
+            type: String
+            Response to the auth challenge (see "Authentication" for more information).
+    """
+    def __init__(self, auth):
+        base_classes.Baserequests.__init__(self)
+        self.name = "Authenticate"
+        self.dataout["auth"] = auth
+
+
+class SetHeartbeat(base_classes.Baserequests):
+    """Enable/disable sending of the Heartbeat event
+
+    :Arguments:
+       *enable*
+            type: boolean
+            Starts/Stops emitting heartbeat messages
+    """
+    def __init__(self, enable):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetHeartbeat"
+        self.dataout["enable"] = enable
+
+
+class SetCurrentProfile(base_classes.Baserequests):
+    """Set the currently active profile.
+
+    :Arguments:
+       *profile-name*
+            type: String
+            Name of the desired profile.
+    """
+    def __init__(self, profile_name):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetCurrentProfile"
+        self.dataout["profile_name"] = profile_name
+
+
+class GetCurrentProfile(base_classes.Baserequests):
+    """Get the name of the current profile.
+
+    :Returns:
+       *profile-name*
+            type: String
+            Name of the currently active profile.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetCurrentProfile"
+        self.datain["profile_name"] = None
+
+    def getProfile_name(self):
+        return self.datain["profile_name"]
+
+
+class ListProfiles(base_classes.Baserequests):
+    """Get a list of available profiles.
+
+    :Returns:
+       *profiles*
+            type: Object|Array
+            List of available profiles.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "ListProfiles"
+        self.datain["profiles"] = None
+
+    def getProfiles(self):
+        return self.datain["profiles"]
+
+
+class StartStopRecording(base_classes.Baserequests):
+    """Toggle recording on or off.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StartStopRecording"
+
+
+class StartRecording(base_classes.Baserequests):
+    """Start recording.
+Will return an `error` if recording is already active.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StartRecording"
+
+
+class StopRecording(base_classes.Baserequests):
+    """Stop recording.
+Will return an `error` if recording is not active.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StopRecording"
+
+
+class SetRecordingFolder(base_classes.Baserequests):
+    """Change the current recording folder.
+
+    :Arguments:
+       *rec-folder*
+            type: String
+            Path of the recording folder.
+    """
+    def __init__(self, rec_folder):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetRecordingFolder"
+        self.dataout["rec_folder"] = rec_folder
+
+
+class GetRecordingFolder(base_classes.Baserequests):
+    """Get the path of  the current recording folder.
+
+    :Returns:
+       *rec-folder*
+            type: String
+            Path of the recording folder.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetRecordingFolder"
+        self.datain["rec_folder"] = None
+
+    def getRec_folder(self):
+        return self.datain["rec_folder"]
+
+
+class StartStopReplayBuffer(base_classes.Baserequests):
+    """Toggle the Replay Buffer on/off.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StartStopReplayBuffer"
+
+
+class StartReplayBuffer(base_classes.Baserequests):
+    """Start recording into the Replay Buffer.
+Will return an `error` if the Replay Buffer is already active or if the
+"Save Replay Buffer" hotkey is not set in OBS' settings.
+Setting this hotkey is mandatory, even when triggering saves only
+through obs-websocket.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StartReplayBuffer"
+
+
+class StopReplayBuffer(base_classes.Baserequests):
+    """Stop recording into the Replay Buffer.
+Will return an `error` if the Replay Buffer is not active.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StopReplayBuffer"
+
+
+class SaveReplayBuffer(base_classes.Baserequests):
+    """Flush and save the contents of the Replay Buffer to disk. This is
+basically the same as triggering the "Save Replay Buffer" hotkey.
+Will return an `error` if the Replay Buffer is not active.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SaveReplayBuffer"
+
+
+class SetCurrentSceneCollection(base_classes.Baserequests):
+    """Change the active scene collection.
+
+    :Arguments:
+       *sc-name*
+            type: String
+            Name of the desired scene collection.
+    """
+    def __init__(self, sc_name):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetCurrentSceneCollection"
+        self.dataout["sc_name"] = sc_name
+
+
+class GetCurrentSceneCollection(base_classes.Baserequests):
+    """Get the name of the current scene collection.
+
+    :Returns:
+       *sc-name*
+            type: String
+            Name of the currently active scene collection.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetCurrentSceneCollection"
+        self.datain["sc_name"] = None
+
+    def getSc_name(self):
+        return self.datain["sc_name"]
+
+
+class ListSceneCollections(base_classes.Baserequests):
+    """List available scene collections
+
+    :Returns:
+       *scene-collections*
+            type: Object|Array
+            Scene collections list
+       *scene-collections.*.*
+            type: String
+            
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "ListSceneCollections"
+        self.datain["scene_collections"] = None
+        self.datain["scene_collections___"] = None
+
+    def getScene_collections(self):
+        return self.datain["scene_collections"]
+
+    def getScene_collections___(self):
+        return self.datain["scene_collections___"]
+
+
+class GetSceneItemProperties(base_classes.Baserequests):
+    """Gets the scene specific properties of the specified source item.
+
+    :Arguments:
+       *scene-name*
+            type: String (optional)
+            the name of the scene that the source item belongs to. Defaults to the current scene.
+       *item*
+            type: String
+            The name of the source.
+    :Returns:
+       *name*
+            type: String
+            The name of the source.
+       *position.x*
+            type: int
+            The x position of the source from the left.
+       *position.y*
+            type: int
+            The y position of the source from the top.
+       *position.alignment*
+            type: int
+            The point on the source that the item is manipulated from.
+       *rotation*
+            type: double
+            The clockwise rotation of the item in degrees around the point of alignment.
+       *scale.x*
+            type: double
+            The x-scale factor of the source.
+       *scale.y*
+            type: double
+            The y-scale factor of the source.
+       *crop.top*
+            type: int
+            The number of pixels cropped off the top of the source before scaling.
+       *crop.right*
+            type: int
+            The number of pixels cropped off the right of the source before scaling.
+       *crop.bottom*
+            type: int
+            The number of pixels cropped off the bottom of the source before scaling.
+       *crop.left*
+            type: int
+            The number of pixels cropped off the left of the source before scaling.
+       *visible*
+            type: bool
+            If the source is visible.
+       *bounds.type*
+            type: String
+            Type of bounding box.
+       *bounds.alignment*
+            type: int
+            Alignment of the bounding box.
+       *bounds.x*
+            type: double
+            Width of the bounding box.
+       *bounds.y*
+            type: double
+            Height of the bounding box.
+    """
+    def __init__(self, item, scene_name = None):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetSceneItemProperties"
+        self.datain["name"] = None
+        self.datain["position_x"] = None
+        self.datain["position_y"] = None
+        self.datain["position_alignment"] = None
+        self.datain["rotation"] = None
+        self.datain["scale_x"] = None
+        self.datain["scale_y"] = None
+        self.datain["crop_top"] = None
+        self.datain["crop_right"] = None
+        self.datain["crop_bottom"] = None
+        self.datain["crop_left"] = None
+        self.datain["visible"] = None
+        self.datain["bounds_type"] = None
+        self.datain["bounds_alignment"] = None
+        self.datain["bounds_x"] = None
+        self.datain["bounds_y"] = None
+        self.dataout["item"] = item
+        self.dataout["scene_name"] = scene_name
+
+    def getName(self):
+        return self.datain["name"]
+
+    def getPosition_x(self):
+        return self.datain["position_x"]
+
+    def getPosition_y(self):
+        return self.datain["position_y"]
+
+    def getPosition_alignment(self):
+        return self.datain["position_alignment"]
+
+    def getRotation(self):
+        return self.datain["rotation"]
+
+    def getScale_x(self):
+        return self.datain["scale_x"]
+
+    def getScale_y(self):
+        return self.datain["scale_y"]
+
+    def getCrop_top(self):
+        return self.datain["crop_top"]
+
+    def getCrop_right(self):
+        return self.datain["crop_right"]
+
+    def getCrop_bottom(self):
+        return self.datain["crop_bottom"]
+
+    def getCrop_left(self):
+        return self.datain["crop_left"]
+
+    def getVisible(self):
+        return self.datain["visible"]
+
+    def getBounds_type(self):
+        return self.datain["bounds_type"]
+
+    def getBounds_alignment(self):
+        return self.datain["bounds_alignment"]
+
+    def getBounds_x(self):
+        return self.datain["bounds_x"]
+
+    def getBounds_y(self):
+        return self.datain["bounds_y"]
+
+
+class SetSceneItemProperties(base_classes.Baserequests):
+    """Sets the scene specific properties of a source. Unspecified properties will remain unchanged.
+
+    :Arguments:
+       *scene-name*
+            type: String (optional)
+            the name of the scene that the source item belongs to. Defaults to the current scene.
+       *item*
+            type: String
+            The name of the source.
+       *position.x*
+            type: int
+            The new x position of the source.
+       *position.y*
+            type: int
+            The new y position of the source.
+       *position.alignment*
+            type: int
+            The new alignment of the source.
+       *rotation*
+            type: double
+            The new clockwise rotation of the item in degrees.
+       *scale.x*
+            type: double
+            The new x scale of the item.
+       *scale.y*
+            type: double
+            The new y scale of the item.
+       *crop.top*
+            type: int
+            The new amount of pixels cropped off the top of the source before scaling.
+       *crop.bottom*
+            type: int
+            The new amount of pixels cropped off the bottom of the source before scaling.
+       *crop.left*
+            type: int
+            The new amount of pixels cropped off the left of the source before scaling.
+       *crop.right*
+            type: int
+            The new amount of pixels cropped off the right of the source before scaling.
+       *visible*
+            type: bool
+            The new visibility of the source. 'true' shows source, 'false' hides source.
+       *bounds.type*
+            type: String
+            The new bounds type of the source.
+       *bounds.alignment*
+            type: int
+            The new alignment of the bounding box. (0-2, 4-6, 8-10)
+       *bounds.x*
+            type: double
+            The new width of the bounding box.
+       *bounds.y*
+            type: double
+            The new height of the bounding box.
+    """
+    def __init__(self, item, position_x, position_y, position_alignment, rotation, scale_x, scale_y, crop_top, crop_bottom, crop_left, crop_right, visible, bounds_type, bounds_alignment, bounds_x, bounds_y, scene_name = None):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetSceneItemProperties"
+        self.dataout["item"] = item
+        self.dataout["position_x"] = position_x
+        self.dataout["position_y"] = position_y
+        self.dataout["position_alignment"] = position_alignment
+        self.dataout["rotation"] = rotation
+        self.dataout["scale_x"] = scale_x
+        self.dataout["scale_y"] = scale_y
+        self.dataout["crop_top"] = crop_top
+        self.dataout["crop_bottom"] = crop_bottom
+        self.dataout["crop_left"] = crop_left
+        self.dataout["crop_right"] = crop_right
+        self.dataout["visible"] = visible
+        self.dataout["bounds_type"] = bounds_type
+        self.dataout["bounds_alignment"] = bounds_alignment
+        self.dataout["bounds_x"] = bounds_x
+        self.dataout["bounds_y"] = bounds_y
+        self.dataout["scene_name"] = scene_name
+
+
+class ResetSceneItem(base_classes.Baserequests):
+    """Reset a scene item.
+
+    :Arguments:
+       *scene-name*
+            type: String (optional)
+            Name of the scene the source belogns to. Defaults to the current scene.
+       *item*
+            type: String
+            Name of the source item.
+    """
+    def __init__(self, item, scene_name = None):
+        base_classes.Baserequests.__init__(self)
+        self.name = "ResetSceneItem"
+        self.dataout["item"] = item
+        self.dataout["scene_name"] = scene_name
+
+
+class SetSceneItemRender(base_classes.Baserequests):
     """Show or hide a specified source item in a specified scene.
 
     :Arguments:
        *source*
             type: String
-            Name of the source in the specified scene.
+            Scene item name in the specified scene.
        *render*
             type: boolean
-            Desired visibility.
+            true = shown ; false = hidden
        *scene-name*
             type: String (optional)
             Name of the scene where the source resides. Defaults to the currently active scene.
     """
     def __init__(self, source, render, scene_name = None):
         base_classes.Baserequests.__init__(self)
-        self.name = "SetSourceRender"
+        self.name = "SetSceneItemRender"
         self.dataout["source"] = source
         self.dataout["render"] = render
         self.dataout["scene_name"] = scene_name
-
-
-class SetVolume(base_classes.Baserequests):
-    """Set the volume of the specified source.
-
-    :Arguments:
-       *source*
-            type: String
-            Name of the source.
-       *volume*
-            type: double
-            Desired volume. Must be between `0.0` and `1.0`.
-    """
-    def __init__(self, source, volume):
-        base_classes.Baserequests.__init__(self)
-        self.name = "SetVolume"
-        self.dataout["source"] = source
-        self.dataout["volume"] = volume
-
-
-class GetVolume(base_classes.Baserequests):
-    """Get the volume of the specified source.
-
-    :Arguments:
-       *source*
-            type: String
-            Name of the source.
-    :Returns:
-       *name*
-            type: String
-            Name of the source.
-       *volume*
-            type: double
-            Volume of the source. Between `0.0` and `1.0`.
-       *mute*
-            type: boolean
-            Indicates whether the source is muted.
-    """
-    def __init__(self, source):
-        base_classes.Baserequests.__init__(self)
-        self.name = "GetVolume"
-        self.datain["name"] = None
-        self.datain["volume"] = None
-        self.datain["mute"] = None
-        self.dataout["source"] = source
-
-    def getName(self):
-        return self.datain["name"]
-
-    def getVolume(self):
-        return self.datain["volume"]
-
-    def getMute(self):
-        return self.datain["mute"]
-
-
-class ToggleMute(base_classes.Baserequests):
-    """Inverts the mute status of a specified source.
-
-    :Arguments:
-       *source*
-            type: String
-            The name of the source.
-    """
-    def __init__(self, source):
-        base_classes.Baserequests.__init__(self)
-        self.name = "ToggleMute"
-        self.dataout["source"] = source
-
-
-class SetMute(base_classes.Baserequests):
-    """Sets the mute status of a specified source.
-
-    :Arguments:
-       *source*
-            type: String
-            The name of the source.
-       *mute*
-            type: boolean
-            Desired mute status.
-    """
-    def __init__(self, source, mute):
-        base_classes.Baserequests.__init__(self)
-        self.name = "SetMute"
-        self.dataout["source"] = source
-        self.dataout["mute"] = mute
-
-
-class GetMute(base_classes.Baserequests):
-    """Get the mute status of a specified source.
-
-    :Arguments:
-       *source*
-            type: String
-            The name of the source.
-    :Returns:
-       *name*
-            type: String
-            The name of the source.
-       *muted*
-            type: boolean
-            Mute status of the source.
-    """
-    def __init__(self, source):
-        base_classes.Baserequests.__init__(self)
-        self.name = "GetMute"
-        self.datain["name"] = None
-        self.datain["muted"] = None
-        self.dataout["source"] = source
-
-    def getName(self):
-        return self.datain["name"]
-
-    def getMuted(self):
-        return self.datain["muted"]
-
-
-class SetSyncOffset(base_classes.Baserequests):
-    """Set the audio sync offset of a specified source.
-
-    :Arguments:
-       *source*
-            type: String
-            The name of the source.
-       *offset*
-            type: int
-            The desired audio sync offset (in nanoseconds).
-    """
-    def __init__(self, source, offset):
-        base_classes.Baserequests.__init__(self)
-        self.name = "SetSyncOffset"
-        self.dataout["source"] = source
-        self.dataout["offset"] = offset
-
-
-class GetSyncOffset(base_classes.Baserequests):
-    """Get the audio sync offset of a specified source.
-
-    :Arguments:
-       *source*
-            type: String
-            The name of the source.
-    :Returns:
-       *name*
-            type: String
-            The name of the source.
-       *offset*
-            type: int
-            The audio sync offset (in nanoseconds).
-    """
-    def __init__(self, source):
-        base_classes.Baserequests.__init__(self)
-        self.name = "GetSyncOffset"
-        self.datain["name"] = None
-        self.datain["offset"] = None
-        self.dataout["source"] = source
-
-    def getName(self):
-        return self.datain["name"]
-
-    def getOffset(self):
-        return self.datain["offset"]
 
 
 class SetSceneItemPosition(base_classes.Baserequests):
@@ -277,6 +646,453 @@ class SetSceneItemCrop(base_classes.Baserequests):
         self.dataout["left"] = left
         self.dataout["right"] = right
         self.dataout["scene_name"] = scene_name
+
+
+class SetCurrentScene(base_classes.Baserequests):
+    """Switch to the specified scene.
+
+    :Arguments:
+       *scene-name*
+            type: String
+            Name of the scene to switch to.
+    """
+    def __init__(self, scene_name):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetCurrentScene"
+        self.dataout["scene_name"] = scene_name
+
+
+class GetCurrentScene(base_classes.Baserequests):
+    """Get the current scene's name and source items.
+
+    :Returns:
+       *name*
+            type: String
+            Name of the currently active scene.
+       *sources*
+            type: Source|Array
+            Ordered list of the current scene's source items.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetCurrentScene"
+        self.datain["name"] = None
+        self.datain["sources"] = None
+
+    def getName(self):
+        return self.datain["name"]
+
+    def getSources(self):
+        return self.datain["sources"]
+
+
+class GetSceneList(base_classes.Baserequests):
+    """Get a list of scenes in the currently active profile.
+
+    :Returns:
+       *current-scene*
+            type: String
+            Name of the currently active scene.
+       *scenes*
+            type: Scene|Array
+            Ordered list of the current profile's scenes (See `[GetCurrentScene](#getcurrentscene)` for more information).
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetSceneList"
+        self.datain["current_scene"] = None
+        self.datain["scenes"] = None
+
+    def getCurrent_scene(self):
+        return self.datain["current_scene"]
+
+    def getScenes(self):
+        return self.datain["scenes"]
+
+
+class GetSourcesList(base_classes.Baserequests):
+    """List all sources available in the running OBS instance
+
+    :Returns:
+       *sources*
+            type: Array of Objects
+            Array of sources as objects
+       *sources.*.name*
+            type: String
+            Unique source name
+       *sources.*.typeId*
+            type: String
+            Non-unique source internal type (a.k.a type id)
+       *sources.*.type*
+            type: String
+            Source type. Value is one of the following: "input", "filter", "transition", "scene" or "unknown"
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetSourcesList"
+        self.datain["sources"] = None
+        self.datain["sources___name"] = None
+        self.datain["sources___typeId"] = None
+        self.datain["sources___type"] = None
+
+    def getSources(self):
+        return self.datain["sources"]
+
+    def getSources___name(self):
+        return self.datain["sources___name"]
+
+    def getSources___typeid(self):
+        return self.datain["sources___typeId"]
+
+    def getSources___type(self):
+        return self.datain["sources___type"]
+
+
+class GetSourcesTypesList(base_classes.Baserequests):
+    """Get a list of all available sources types
+
+    :Returns:
+       *ids*
+            type: Array of Objects
+            Array of sources as objects
+       *ids.*.typeId*
+            type: String
+            Non-unique internal source type ID
+       *ids.*.displayName*
+            type: String
+            Display name of the source type
+       *ids.*.type*
+            type: String
+            Type. Value is one of the following: "input", "filter", "transition" or "other"
+       *ids.*.defaultSettings*
+            type: Object
+            Default settings of this source type
+       *ids.*.caps*
+            type: Object
+            Source type capabilities
+       *ids.*.caps.isAsync*
+            type: Boolean
+            True if source of this type provide frames asynchronously
+       *ids.*.caps.hasVideo*
+            type: Boolean
+            True if sources of this type provide video
+       *ids.*.caps.hasAudio*
+            type: Boolean
+            True if sources of this type provide audio
+       *ids.*.caps.canInteract*
+            type: Boolean
+            True if interaction with this sources of this type is possible
+       *ids.*.caps.isComposite*
+            type: Boolean
+            True if sources of this type composite one or more sub-sources
+       *ids.*.caps.doNotDuplicate*
+            type: Boolean
+            True if sources of this type should not be fully duplicated
+       *ids.*.caps.doNotSelfMonitor*
+            type: Boolean
+            True if sources of this type may cause a feedback loop if it's audio is monitored and shouldn't be
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetSourcesTypesList"
+        self.datain["ids"] = None
+        self.datain["ids___typeId"] = None
+        self.datain["ids___displayName"] = None
+        self.datain["ids___type"] = None
+        self.datain["ids___defaultSettings"] = None
+        self.datain["ids___caps"] = None
+        self.datain["ids___caps_isAsync"] = None
+        self.datain["ids___caps_hasVideo"] = None
+        self.datain["ids___caps_hasAudio"] = None
+        self.datain["ids___caps_canInteract"] = None
+        self.datain["ids___caps_isComposite"] = None
+        self.datain["ids___caps_doNotDuplicate"] = None
+        self.datain["ids___caps_doNotSelfMonitor"] = None
+
+    def getIds(self):
+        return self.datain["ids"]
+
+    def getIds___typeid(self):
+        return self.datain["ids___typeId"]
+
+    def getIds___displayname(self):
+        return self.datain["ids___displayName"]
+
+    def getIds___type(self):
+        return self.datain["ids___type"]
+
+    def getIds___defaultsettings(self):
+        return self.datain["ids___defaultSettings"]
+
+    def getIds___caps(self):
+        return self.datain["ids___caps"]
+
+    def getIds___caps_isasync(self):
+        return self.datain["ids___caps_isAsync"]
+
+    def getIds___caps_hasvideo(self):
+        return self.datain["ids___caps_hasVideo"]
+
+    def getIds___caps_hasaudio(self):
+        return self.datain["ids___caps_hasAudio"]
+
+    def getIds___caps_caninteract(self):
+        return self.datain["ids___caps_canInteract"]
+
+    def getIds___caps_iscomposite(self):
+        return self.datain["ids___caps_isComposite"]
+
+    def getIds___caps_donotduplicate(self):
+        return self.datain["ids___caps_doNotDuplicate"]
+
+    def getIds___caps_donotselfmonitor(self):
+        return self.datain["ids___caps_doNotSelfMonitor"]
+
+
+class GetVolume(base_classes.Baserequests):
+    """Get the volume of the specified source.
+
+    :Arguments:
+       *source*
+            type: String
+            Name of the source.
+    :Returns:
+       *name*
+            type: String
+            Name of the source.
+       *volume*
+            type: double
+            Volume of the source. Between `0.0` and `1.0`.
+       *mute*
+            type: boolean
+            Indicates whether the source is muted.
+    """
+    def __init__(self, source):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetVolume"
+        self.datain["name"] = None
+        self.datain["volume"] = None
+        self.datain["mute"] = None
+        self.dataout["source"] = source
+
+    def getName(self):
+        return self.datain["name"]
+
+    def getVolume(self):
+        return self.datain["volume"]
+
+    def getMute(self):
+        return self.datain["mute"]
+
+
+class SetVolume(base_classes.Baserequests):
+    """Set the volume of the specified source.
+
+    :Arguments:
+       *source*
+            type: String
+            Name of the source.
+       *volume*
+            type: double
+            Desired volume. Must be between `0.0` and `1.0`.
+    """
+    def __init__(self, source, volume):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetVolume"
+        self.dataout["source"] = source
+        self.dataout["volume"] = volume
+
+
+class GetMute(base_classes.Baserequests):
+    """Get the mute status of a specified source.
+
+    :Arguments:
+       *source*
+            type: String
+            The name of the source.
+    :Returns:
+       *name*
+            type: String
+            The name of the source.
+       *muted*
+            type: boolean
+            Mute status of the source.
+    """
+    def __init__(self, source):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetMute"
+        self.datain["name"] = None
+        self.datain["muted"] = None
+        self.dataout["source"] = source
+
+    def getName(self):
+        return self.datain["name"]
+
+    def getMuted(self):
+        return self.datain["muted"]
+
+
+class SetMute(base_classes.Baserequests):
+    """Sets the mute status of a specified source.
+
+    :Arguments:
+       *source*
+            type: String
+            The name of the source.
+       *mute*
+            type: boolean
+            Desired mute status.
+    """
+    def __init__(self, source, mute):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetMute"
+        self.dataout["source"] = source
+        self.dataout["mute"] = mute
+
+
+class ToggleMute(base_classes.Baserequests):
+    """Inverts the mute status of a specified source.
+
+    :Arguments:
+       *source*
+            type: String
+            The name of the source.
+    """
+    def __init__(self, source):
+        base_classes.Baserequests.__init__(self)
+        self.name = "ToggleMute"
+        self.dataout["source"] = source
+
+
+class SetSyncOffset(base_classes.Baserequests):
+    """Set the audio sync offset of a specified source.
+
+    :Arguments:
+       *source*
+            type: String
+            The name of the source.
+       *offset*
+            type: int
+            The desired audio sync offset (in nanoseconds).
+    """
+    def __init__(self, source, offset):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetSyncOffset"
+        self.dataout["source"] = source
+        self.dataout["offset"] = offset
+
+
+class GetSyncOffset(base_classes.Baserequests):
+    """Get the audio sync offset of a specified source.
+
+    :Arguments:
+       *source*
+            type: String
+            The name of the source.
+    :Returns:
+       *name*
+            type: String
+            The name of the source.
+       *offset*
+            type: int
+            The audio sync offset (in nanoseconds).
+    """
+    def __init__(self, source):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetSyncOffset"
+        self.datain["name"] = None
+        self.datain["offset"] = None
+        self.dataout["source"] = source
+
+    def getName(self):
+        return self.datain["name"]
+
+    def getOffset(self):
+        return self.datain["offset"]
+
+
+class GetSourceSettings(base_classes.Baserequests):
+    """Get settings of the specified source
+
+    :Arguments:
+       *sourceName*
+            type: String
+            Name of the source item.
+       *sourceType*
+            type: String (optional)
+            Type of the specified source. Useful for type-checking if you expect a specific settings schema.
+    :Returns:
+       *sourceName*
+            type: String
+            Source name
+       *sourceType*
+            type: String
+            Type of the specified source
+       *sourceSettings*
+            type: Object
+            Source settings. Varying between source types.
+    """
+    def __init__(self, sourceName, sourceType = None):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetSourceSettings"
+        self.datain["sourceName"] = None
+        self.datain["sourceType"] = None
+        self.datain["sourceSettings"] = None
+        self.dataout["sourceName"] = sourceName
+        self.dataout["sourceType"] = sourceType
+
+    def getSourcename(self):
+        return self.datain["sourceName"]
+
+    def getSourcetype(self):
+        return self.datain["sourceType"]
+
+    def getSourcesettings(self):
+        return self.datain["sourceSettings"]
+
+
+class SetSourceSettings(base_classes.Baserequests):
+    """Set settings of the specified source.
+
+    :Arguments:
+       *sourceName*
+            type: String
+            Name of the source item.
+       *sourceType*
+            type: String (optional)
+            Type of the specified source. Useful for type-checking to avoid settings a set of settings incompatible with the actual source's type.
+       *sourceSettings*
+            type: Object
+            Source settings. Varying between source types.
+    :Returns:
+       *sourceName*
+            type: String
+            Source name
+       *sourceType*
+            type: String
+            Type of the specified source
+       *sourceSettings*
+            type: Object
+            Source settings. Varying between source types.
+    """
+    def __init__(self, sourceName, sourceSettings, sourceType = None):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetSourceSettings"
+        self.datain["sourceName"] = None
+        self.datain["sourceType"] = None
+        self.datain["sourceSettings"] = None
+        self.dataout["sourceName"] = sourceName
+        self.dataout["sourceSettings"] = sourceSettings
+        self.dataout["sourceType"] = sourceType
+
+    def getSourcename(self):
+        return self.datain["sourceName"]
+
+    def getSourcetype(self):
+        return self.datain["sourceType"]
+
+    def getSourcesettings(self):
+        return self.datain["sourceSettings"]
 
 
 class GetTextGDIPlusProperties(base_classes.Baserequests):
@@ -638,9 +1454,12 @@ class GetBrowserSourceProperties(base_classes.Baserequests):
        *is_local_file*
             type: boolean
             Indicates that a local file is in use.
+       *local_file*
+            type: String
+            file path.
        *url*
             type: String
-            Url or file path.
+            Url.
        *css*
             type: String
             CSS to inject.
@@ -664,6 +1483,7 @@ class GetBrowserSourceProperties(base_classes.Baserequests):
         base_classes.Baserequests.__init__(self)
         self.name = "GetBrowserSourceProperties"
         self.datain["is_local_file"] = None
+        self.datain["local_file"] = None
         self.datain["url"] = None
         self.datain["css"] = None
         self.datain["width"] = None
@@ -676,6 +1496,9 @@ class GetBrowserSourceProperties(base_classes.Baserequests):
 
     def getIs_local_file(self):
         return self.datain["is_local_file"]
+
+    def getLocal_file(self):
+        return self.datain["local_file"]
 
     def getUrl(self):
         return self.datain["url"]
@@ -712,9 +1535,12 @@ class SetBrowserSourceProperties(base_classes.Baserequests):
        *is_local_file*
             type: boolean (optional)
             Indicates that a local file is in use.
+       *local_file*
+            type: String (optional)
+            file path.
        *url*
             type: String (optional)
-            Url or file path.
+            Url.
        *css*
             type: String (optional)
             CSS to inject.
@@ -734,12 +1560,13 @@ class SetBrowserSourceProperties(base_classes.Baserequests):
             type: boolean (optional)
             Visibility of the scene item.
     """
-    def __init__(self, source, scene_name = None, is_local_file = None, url = None, css = None, width = None, height = None, fps = None, shutdown = None, render = None):
+    def __init__(self, source, scene_name = None, is_local_file = None, local_file = None, url = None, css = None, width = None, height = None, fps = None, shutdown = None, render = None):
         base_classes.Baserequests.__init__(self)
         self.name = "SetBrowserSourceProperties"
         self.dataout["source"] = source
         self.dataout["scene_name"] = scene_name
         self.dataout["is_local_file"] = is_local_file
+        self.dataout["local_file"] = local_file
         self.dataout["url"] = url
         self.dataout["css"] = css
         self.dataout["width"] = width
@@ -749,22 +1576,270 @@ class SetBrowserSourceProperties(base_classes.Baserequests):
         self.dataout["render"] = render
 
 
-class ResetSceneItem(base_classes.Baserequests):
-    """Reset a source item.
+class GetSpecialSources(base_classes.Baserequests):
+    """Get configured special sources like Desktop Audio and Mic/Aux sources.
+
+    :Returns:
+       *desktop-1*
+            type: String (optional)
+            Name of the first Desktop Audio capture source.
+       *desktop-2*
+            type: String (optional)
+            Name of the second Desktop Audio capture source.
+       *mic-1*
+            type: String (optional)
+            Name of the first Mic/Aux input source.
+       *mic-2*
+            type: String (optional)
+            Name of the second Mic/Aux input source.
+       *mic-3*
+            type: String (optional)
+            NAme of the third Mic/Aux input source.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetSpecialSources"
+        self.datain["desktop_1"] = None
+        self.datain["desktop_2"] = None
+        self.datain["mic_1"] = None
+        self.datain["mic_2"] = None
+        self.datain["mic_3"] = None
+
+    def getDesktop_1(self):
+        return self.datain["desktop_1"]
+
+    def getDesktop_2(self):
+        return self.datain["desktop_2"]
+
+    def getMic_1(self):
+        return self.datain["mic_1"]
+
+    def getMic_2(self):
+        return self.datain["mic_2"]
+
+    def getMic_3(self):
+        return self.datain["mic_3"]
+
+
+class GetStreamingStatus(base_classes.Baserequests):
+    """Get current streaming and recording status.
+
+    :Returns:
+       *streaming*
+            type: boolean
+            Current streaming status.
+       *recording*
+            type: boolean
+            Current recording status.
+       *stream-timecode*
+            type: String (optional)
+            Time elapsed since streaming started (only present if currently streaming).
+       *rec-timecode*
+            type: String (optional)
+            Time elapsed since recording started (only present if currently recording).
+       *preview-only*
+            type: boolean
+            Always false. Retrocompatibility with OBSRemote.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetStreamingStatus"
+        self.datain["streaming"] = None
+        self.datain["recording"] = None
+        self.datain["stream_timecode"] = None
+        self.datain["rec_timecode"] = None
+        self.datain["preview_only"] = None
+
+    def getStreaming(self):
+        return self.datain["streaming"]
+
+    def getRecording(self):
+        return self.datain["recording"]
+
+    def getStream_timecode(self):
+        return self.datain["stream_timecode"]
+
+    def getRec_timecode(self):
+        return self.datain["rec_timecode"]
+
+    def getPreview_only(self):
+        return self.datain["preview_only"]
+
+
+class StartStopStreaming(base_classes.Baserequests):
+    """Toggle streaming on or off.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StartStopStreaming"
+
+
+class StartStreaming(base_classes.Baserequests):
+    """Start streaming.
+Will return an `error` if streaming is already active.
 
     :Arguments:
-       *scene-name*
+       *stream*
+            type: Object (optional)
+            Special stream configuration. Please note: these won't be saved to OBS' configuration.
+       *stream.type*
             type: String (optional)
-            Name of the scene the source belogns to. Defaults to the current scene.
-       *item*
-            type: String
-            Name of the source item.
+            If specified ensures the type of stream matches the given type (usually 'rtmp_custom' or 'rtmp_common'). If the currently configured stream type does not match the given stream type, all settings must be specified in the `settings` object or an error will occur when starting the stream.
+       *stream.metadata*
+            type: Object (optional)
+            Adds the given object parameters as encoded query string parameters to the 'key' of the RTMP stream. Used to pass data to the RTMP service about the streaming. May be any String, Numeric, or Boolean field.
+       *stream.settings*
+            type: Object (optional)
+            Settings for the stream.
+       *stream.settings.server*
+            type: String (optional)
+            The publish URL.
+       *stream.settings.key*
+            type: String (optional)
+            The publish key of the stream.
+       *stream.settings.use-auth*
+            type: boolean (optional)
+            Indicates whether authentication should be used when connecting to the streaming server.
+       *stream.settings.username*
+            type: String (optional)
+            If authentication is enabled, the username for the streaming server. Ignored if `use-auth` is not set to `true`.
+       *stream.settings.password*
+            type: String (optional)
+            If authentication is enabled, the password for the streaming server. Ignored if `use-auth` is not set to `true`.
     """
-    def __init__(self, item, scene_name = None):
+    def __init__(self, stream = None, stream_type = None, stream_metadata = None, stream_settings = None, stream_settings_server = None, stream_settings_key = None, stream_settings_use_auth = None, stream_settings_username = None, stream_settings_password = None):
         base_classes.Baserequests.__init__(self)
-        self.name = "ResetSceneItem"
-        self.dataout["item"] = item
-        self.dataout["scene_name"] = scene_name
+        self.name = "StartStreaming"
+        self.dataout["stream"] = stream
+        self.dataout["stream_type"] = stream_type
+        self.dataout["stream_metadata"] = stream_metadata
+        self.dataout["stream_settings"] = stream_settings
+        self.dataout["stream_settings_server"] = stream_settings_server
+        self.dataout["stream_settings_key"] = stream_settings_key
+        self.dataout["stream_settings_use_auth"] = stream_settings_use_auth
+        self.dataout["stream_settings_username"] = stream_settings_username
+        self.dataout["stream_settings_password"] = stream_settings_password
+
+
+class StopStreaming(base_classes.Baserequests):
+    """Stop streaming.
+Will return an `error` if streaming is not active.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "StopStreaming"
+
+
+class SetStreamSettings(base_classes.Baserequests):
+    """Sets one or more attributes of the current streaming server settings. Any options not passed will remain unchanged. Returns the updated settings in response. If 'type' is different than the current streaming service type, all settings are required. Returns the full settings of the stream (the same as GetStreamSettings).
+
+    :Arguments:
+       *type*
+            type: String
+            The type of streaming service configuration, usually `rtmp_custom` or `rtmp_common`.
+       *settings*
+            type: Object
+            The actual settings of the stream.
+       *settings.server*
+            type: String (optional)
+            The publish URL.
+       *settings.key*
+            type: String (optional)
+            The publish key.
+       *settings.use-auth*
+            type: boolean (optional)
+            Indicates whether authentication should be used when connecting to the streaming server.
+       *settings.username*
+            type: String (optional)
+            The username for the streaming service.
+       *settings.password*
+            type: String (optional)
+            The password for the streaming service.
+       *save*
+            type: boolean
+            Persist the settings to disk.
+    """
+    def __init__(self, type, settings, save, settings_server = None, settings_key = None, settings_use_auth = None, settings_username = None, settings_password = None):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SetStreamSettings"
+        self.dataout["type"] = type
+        self.dataout["settings"] = settings
+        self.dataout["save"] = save
+        self.dataout["settings_server"] = settings_server
+        self.dataout["settings_key"] = settings_key
+        self.dataout["settings_use_auth"] = settings_use_auth
+        self.dataout["settings_username"] = settings_username
+        self.dataout["settings_password"] = settings_password
+
+
+class GetStreamSettings(base_classes.Baserequests):
+    """Get the current streaming server settings.
+
+    :Returns:
+       *type*
+            type: String
+            The type of streaming service configuration. Possible values: 'rtmp_custom' or 'rtmp_common'.
+       *settings*
+            type: Object
+            Stream settings object.
+       *settings.server*
+            type: String
+            The publish URL.
+       *settings.key*
+            type: String
+            The publish key of the stream.
+       *settings.use-auth*
+            type: boolean
+            Indicates whether audentication should be used when connecting to the streaming server.
+       *settings.username*
+            type: String
+            The username to use when accessing the streaming server. Only present if `use-auth` is `true`.
+       *settings.password*
+            type: String
+            The password to use when accessing the streaming server. Only present if `use-auth` is `true`.
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "GetStreamSettings"
+        self.datain["type"] = None
+        self.datain["settings"] = None
+        self.datain["settings_server"] = None
+        self.datain["settings_key"] = None
+        self.datain["settings_use_auth"] = None
+        self.datain["settings_username"] = None
+        self.datain["settings_password"] = None
+
+    def getType(self):
+        return self.datain["type"]
+
+    def getSettings(self):
+        return self.datain["settings"]
+
+    def getSettings_server(self):
+        return self.datain["settings_server"]
+
+    def getSettings_key(self):
+        return self.datain["settings_key"]
+
+    def getSettings_use_auth(self):
+        return self.datain["settings_use_auth"]
+
+    def getSettings_username(self):
+        return self.datain["settings_username"]
+
+    def getSettings_password(self):
+        return self.datain["settings_password"]
+
+
+class SaveStreamSettings(base_classes.Baserequests):
+    """Save the current streaming server settings to disk.
+
+    """
+    def __init__(self):
+        base_classes.Baserequests.__init__(self)
+        self.name = "SaveStreamSettings"
 
 
 class GetStudioModeStatus(base_classes.Baserequests):
@@ -872,600 +1947,6 @@ class ToggleStudioMode(base_classes.Baserequests):
     def __init__(self):
         base_classes.Baserequests.__init__(self)
         self.name = "ToggleStudioMode"
-
-
-class GetSpecialSources(base_classes.Baserequests):
-    """Get configured special sources like Desktop Audio and Mic/Aux sources.
-
-    :Returns:
-       *desktop-1*
-            type: String (optional)
-            Name of the first Desktop Audio capture source.
-       *desktop-2*
-            type: String (optional)
-            Name of the second Desktop Audio capture source.
-       *mic-1*
-            type: String (optional)
-            Name of the first Mic/Aux input source.
-       *mic-2*
-            type: String (optional)
-            Name of the second Mic/Aux input source.
-       *mic-3*
-            type: String (optional)
-            NAme of the third Mic/Aux input source.
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "GetSpecialSources"
-        self.datain["desktop_1"] = None
-        self.datain["desktop_2"] = None
-        self.datain["mic_1"] = None
-        self.datain["mic_2"] = None
-        self.datain["mic_3"] = None
-
-    def getDesktop_1(self):
-        return self.datain["desktop_1"]
-
-    def getDesktop_2(self):
-        return self.datain["desktop_2"]
-
-    def getMic_1(self):
-        return self.datain["mic_1"]
-
-    def getMic_2(self):
-        return self.datain["mic_2"]
-
-    def getMic_3(self):
-        return self.datain["mic_3"]
-
-
-class SetStreamingSettings(base_classes.Baserequests):
-    """Sets one or more attributes of the current streaming server settings. Any options not passed will remain unchanged. Returns the updated settings in response. If 'type' is different than the current streaming service type, all settings are required. Returns the full settings of the stream (the same as GetStreamSettings).
-
-    :Arguments:
-       *type*
-            type: String
-            The type of streaming service configuration, usually `rtmp_custom` or `rtmp_common`.
-       *settings*
-            type: Object
-            The actual settings of the stream.
-       *settings.server*
-            type: String (optional)
-            The publish URL.
-       *settings.key*
-            type: String (optional)
-            The publish key.
-       *settings.use-auth*
-            type: boolean (optional)
-            Indicates whether authentication should be used when connecting to the streaming server.
-       *settings.username*
-            type: String (optional)
-            The username for the streaming service.
-       *settings.password*
-            type: String (optional)
-            The password for the streaming service.
-       *save*
-            type: boolean
-            Persist the settings to disk.
-    """
-    def __init__(self, type, settings, save, settings_server = None, settings_key = None, settings_use_auth = None, settings_username = None, settings_password = None):
-        base_classes.Baserequests.__init__(self)
-        self.name = "SetStreamingSettings"
-        self.dataout["type"] = type
-        self.dataout["settings"] = settings
-        self.dataout["save"] = save
-        self.dataout["settings_server"] = settings_server
-        self.dataout["settings_key"] = settings_key
-        self.dataout["settings_use_auth"] = settings_use_auth
-        self.dataout["settings_username"] = settings_username
-        self.dataout["settings_password"] = settings_password
-
-
-class GetStreamSettings(base_classes.Baserequests):
-    """Get the current streaming server settings.
-
-    :Returns:
-       *type*
-            type: String
-            The type of streaming service configuration. Usually 'rtmp_custom' or 'rtmp_common'.
-       *settings*
-            type: Object
-            Setings of the stream.
-       *settings.server*
-            type: String
-            The publish URL.
-       *settings.key*
-            type: String
-            The publish key of the stream.
-       *settings.use-auth*
-            type: boolean
-            Indicates whether audentication should be used when connecting to the streaming server.
-       *settings.username*
-            type: String
-            The username to use when accessing the streaming server. Only present if `use-auth` is `true`.
-       *settings.password*
-            type: String
-            The password to use when accessing the streaming server. Only present if `use-auth` is `true`.
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "GetStreamSettings"
-        self.datain["type"] = None
-        self.datain["settings"] = None
-        self.datain["settings_server"] = None
-        self.datain["settings_key"] = None
-        self.datain["settings_use_auth"] = None
-        self.datain["settings_username"] = None
-        self.datain["settings_password"] = None
-
-    def getType(self):
-        return self.datain["type"]
-
-    def getSettings(self):
-        return self.datain["settings"]
-
-    def getSettings_server(self):
-        return self.datain["settings_server"]
-
-    def getSettings_key(self):
-        return self.datain["settings_key"]
-
-    def getSettings_use_auth(self):
-        return self.datain["settings_use_auth"]
-
-    def getSettings_username(self):
-        return self.datain["settings_username"]
-
-    def getSettings_password(self):
-        return self.datain["settings_password"]
-
-
-class SaveStreamSettings(base_classes.Baserequests):
-    """Save the current streaming server settings to disk.
-
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "SaveStreamSettings"
-
-
-class StartStopReplayBuffer(base_classes.Baserequests):
-    """Toggle the Replay Buffer on/off.
-
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "StartStopReplayBuffer"
-
-
-class StartReplayBuffer(base_classes.Baserequests):
-    """Start recording into the Replay Buffer.
-Will return an `error` if the Replay Buffer is already active or if the
-"Save Replay Buffer" hotkey is not set in OBS' settings.
-Setting this hotkey is mandatory, even when triggering saves only
-through obs-websocket.
-
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "StartReplayBuffer"
-
-
-class StopReplayBuffer(base_classes.Baserequests):
-    """Stop recording into the Replay Buffer.
-Will return an `error` if the Replay Buffer is not active.
-
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "StopReplayBuffer"
-
-
-class SaveReplayBuffer(base_classes.Baserequests):
-    """Save and flush the contents of the Replay Buffer to disk. This is
-basically the same as triggering the "Save Replay Buffer" hotkey.
-Will return an `error` if the Replay Buffer is not active.
-
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "SaveReplayBuffer"
-
-
-class SetCurrentScene(base_classes.Baserequests):
-    """Switch to the specified scene.
-
-    :Arguments:
-       *scene-name*
-            type: String
-            Name of the scene to switch to.
-    """
-    def __init__(self, scene_name):
-        base_classes.Baserequests.__init__(self)
-        self.name = "SetCurrentScene"
-        self.dataout["scene_name"] = scene_name
-
-
-class GetCurrentScene(base_classes.Baserequests):
-    """Get the current scene's name and source items.
-
-    :Returns:
-       *name*
-            type: String
-            Name of the currently active scene.
-       *sources*
-            type: Source|Array
-            Ordered list of the current scene's source items.
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "GetCurrentScene"
-        self.datain["name"] = None
-        self.datain["sources"] = None
-
-    def getName(self):
-        return self.datain["name"]
-
-    def getSources(self):
-        return self.datain["sources"]
-
-
-class GetSceneList(base_classes.Baserequests):
-    """Get a list of scenes in the currently active profile.
-
-    :Returns:
-       *current-scene*
-            type: String
-            Name of the currently active scene.
-       *scenes*
-            type: Scene|Array
-            Ordered list of the current profile's scenes (See `[GetCurrentScene](#getcurrentscene)` for more information).
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "GetSceneList"
-        self.datain["current_scene"] = None
-        self.datain["scenes"] = None
-
-    def getCurrent_scene(self):
-        return self.datain["current_scene"]
-
-    def getScenes(self):
-        return self.datain["scenes"]
-
-
-class SetCurrentProfile(base_classes.Baserequests):
-    """Set the currently active profile.
-
-    :Arguments:
-       *profile-name*
-            type: String
-            Name of the desired profile.
-    """
-    def __init__(self, profile_name):
-        base_classes.Baserequests.__init__(self)
-        self.name = "SetCurrentProfile"
-        self.dataout["profile_name"] = profile_name
-
-
-class GetCurrentProfile(base_classes.Baserequests):
-    """Get the name of the current profile.
-
-    :Returns:
-       *profile-name*
-            type: String
-            Name of the currently active profile.
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "GetCurrentProfile"
-        self.datain["profile_name"] = None
-
-    def getProfile_name(self):
-        return self.datain["profile_name"]
-
-
-class ListProfiles(base_classes.Baserequests):
-    """Get a list of available profiles.
-
-    :Returns:
-       *profiles*
-            type: Object|Array
-            List of available profiles.
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "ListProfiles"
-        self.datain["profiles"] = None
-
-    def getProfiles(self):
-        return self.datain["profiles"]
-
-
-class GetVersion(base_classes.Baserequests):
-    """Returns the latest version of the plugin and the API.
-
-    :Returns:
-       *version*
-            type: double
-            OBSRemote compatible API version. Fixed to 1.1 for retrocompatibility.
-       *obs-websocket-version*
-            type: String
-            obs-websocket plugin version.
-       *obs-studio-version*
-            type: String
-            OBS Studio program version.
-       *available-requests*
-            type: String|Array
-            List of available request types.
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "GetVersion"
-        self.datain["version"] = None
-        self.datain["obs_websocket_version"] = None
-        self.datain["obs_studio_version"] = None
-        self.datain["available_requests"] = None
-
-    def getVersion(self):
-        return self.datain["version"]
-
-    def getObs_websocket_version(self):
-        return self.datain["obs_websocket_version"]
-
-    def getObs_studio_version(self):
-        return self.datain["obs_studio_version"]
-
-    def getAvailable_requests(self):
-        return self.datain["available_requests"]
-
-
-class GetAuthRequired(base_classes.Baserequests):
-    """Tells the client if authentication is required. If so, returns authentication parameters `challenge`
-and `salt` (see "Authentication" for more information).
-
-    :Returns:
-       *authRequired*
-            type: boolean
-            Indicates whether authentication is required.
-       *challenge*
-            type: String (optional)
-            
-       *salt*
-            type: String (optional)
-            
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "GetAuthRequired"
-        self.datain["authRequired"] = None
-        self.datain["challenge"] = None
-        self.datain["salt"] = None
-
-    def getAuthrequired(self):
-        return self.datain["authRequired"]
-
-    def getChallenge(self):
-        return self.datain["challenge"]
-
-    def getSalt(self):
-        return self.datain["salt"]
-
-
-class Authenticate(base_classes.Baserequests):
-    """Attempt to authenticate the client to the server.
-
-    :Arguments:
-       *auth*
-            type: String
-            Response to the auth challenge (see "Authentication" for more information).
-    """
-    def __init__(self, auth):
-        base_classes.Baserequests.__init__(self)
-        self.name = "Authenticate"
-        self.dataout["auth"] = auth
-
-
-class StartStopRecording(base_classes.Baserequests):
-    """Toggle recording on or off.
-
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "StartStopRecording"
-
-
-class StartRecording(base_classes.Baserequests):
-    """Start recording.
-Will return an `error` if recording is already active.
-
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "StartRecording"
-
-
-class StopRecording(base_classes.Baserequests):
-    """Stop recording.
-Will return an `error` if recording is not active.
-
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "StopRecording"
-
-
-class SetRecordingFolder(base_classes.Baserequests):
-    """Change the current recording folder.
-
-    :Arguments:
-       *rec-folder*
-            type: Stsring
-            Path of the recording folder.
-    """
-    def __init__(self, rec_folder):
-        base_classes.Baserequests.__init__(self)
-        self.name = "SetRecordingFolder"
-        self.dataout["rec_folder"] = rec_folder
-
-
-class GetRecordingFolder(base_classes.Baserequests):
-    """Get the path of  the current recording folder.
-
-    :Returns:
-       *rec-folder*
-            type: String
-            Path of the recording folder.
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "GetRecordingFolder"
-        self.datain["rec_folder"] = None
-
-    def getRec_folder(self):
-        return self.datain["rec_folder"]
-
-
-class GetStreamingStatus(base_classes.Baserequests):
-    """Get current streaming and recording status.
-
-    :Returns:
-       *streaming*
-            type: boolean
-            Current streaming status.
-       *recording*
-            type: boolean
-            Current recording status.
-       *stream-timecode*
-            type: String (optional)
-            Time elapsed since streaming started (only present if currently streaming).
-       *rec-timecode*
-            type: String (optional)
-            Time elapsed since recording started (only present if currently recording).
-       *preview-only*
-            type: boolean
-            Always false. Retrocompatibility with OBSRemote.
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "GetStreamingStatus"
-        self.datain["streaming"] = None
-        self.datain["recording"] = None
-        self.datain["stream_timecode"] = None
-        self.datain["rec_timecode"] = None
-        self.datain["preview_only"] = None
-
-    def getStreaming(self):
-        return self.datain["streaming"]
-
-    def getRecording(self):
-        return self.datain["recording"]
-
-    def getStream_timecode(self):
-        return self.datain["stream_timecode"]
-
-    def getRec_timecode(self):
-        return self.datain["rec_timecode"]
-
-    def getPreview_only(self):
-        return self.datain["preview_only"]
-
-
-class StartStopStreaming(base_classes.Baserequests):
-    """Toggle streaming on or off.
-
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "StartStopStreaming"
-
-
-class StartStreaming(base_classes.Baserequests):
-    """Start streaming.
-Will return an `error` if streaming is already active.
-
-    :Arguments:
-       *stream*
-            type: Object (optional)
-            Special stream configuration.
-       *type*
-            type: String (optional)
-            If specified ensures the type of stream matches the given type (usually 'rtmp_custom' or 'rtmp_common'). If the currently configured stream type does not match the given stream type, all settings must be specified in the `settings` object or an error will occur when starting the stream.
-       *metadata*
-            type: Object (optional)
-            Adds the given object parameters as encoded query string parameters to the 'key' of the RTMP stream. Used to pass data to the RTMP service about the streaming. May be any String, Numeric, or Boolean field.
-       *settings*
-            type: Object (optional)
-            Settings for the stream.
-       *settings.server*
-            type: String (optional)
-            The publish URL.
-       *settings.key*
-            type: String (optional)
-            The publish key of the stream.
-       *settings.use-auth*
-            type: boolean (optional)
-            Indicates whether authentication should be used when connecting to the streaming server.
-       *settings.username*
-            type: String (optional)
-            If authentication is enabled, the username for the streaming server. Ignored if `use-auth` is not set to `true`.
-       *settings.password*
-            type: String (optional)
-            If authentication is enabled, the password for the streaming server. Ignored if `use-auth` is not set to `true`.
-    """
-    def __init__(self, stream = None, type = None, metadata = None, settings = None, settings_server = None, settings_key = None, settings_use_auth = None, settings_username = None, settings_password = None):
-        base_classes.Baserequests.__init__(self)
-        self.name = "StartStreaming"
-        self.dataout["stream"] = stream
-        self.dataout["type"] = type
-        self.dataout["metadata"] = metadata
-        self.dataout["settings"] = settings
-        self.dataout["settings_server"] = settings_server
-        self.dataout["settings_key"] = settings_key
-        self.dataout["settings_use_auth"] = settings_use_auth
-        self.dataout["settings_username"] = settings_username
-        self.dataout["settings_password"] = settings_password
-
-
-class StopStreaming(base_classes.Baserequests):
-    """Stop streaming.
-Will return an `error` if streaming is not active.
-
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "StopStreaming"
-
-
-class SetCurrentSceneCollection(base_classes.Baserequests):
-    """Change the active scene collection.
-
-    :Arguments:
-       *sc-name*
-            type: String
-            Name of the desired scene collection.
-    """
-    def __init__(self, sc_name):
-        base_classes.Baserequests.__init__(self)
-        self.name = "SetCurrentSceneCollection"
-        self.dataout["sc_name"] = sc_name
-
-
-class GetCurrentSceneCollection(base_classes.Baserequests):
-    """Get the name of the current scene collection.
-
-    :Returns:
-       *sc-name*
-            type: String
-            Name of the currently active scene collection.
-    """
-    def __init__(self):
-        base_classes.Baserequests.__init__(self)
-        self.name = "GetCurrentSceneCollection"
-        self.datain["sc_name"] = None
-
-    def getSc_name(self):
-        return self.datain["sc_name"]
 
 
 class GetTransitionList(base_classes.Baserequests):
